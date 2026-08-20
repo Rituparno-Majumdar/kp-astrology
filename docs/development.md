@@ -78,12 +78,12 @@ code pyproject.toml CHANGELOG.md
 
 # 2. commit and push the bump
 git add pyproject.toml CHANGELOG.md src/kpastro/__init__.py
-git commit -m "Release 0.1.3: ..."
+git commit -m "Release 0.3.0: ..."
 git push
 
 # 3. tag the release and push the tag — this triggers the publish workflow
-git tag v0.1.3
-git push origin v0.1.3
+git tag v0.3.0
+git push origin v0.3.0
 
 # 4. watch the workflow
 gh run list --workflow="Publish to PyPI" --limit 1
@@ -96,7 +96,7 @@ python -c "import kpastro; print(kpastro.__version__)"
 Notes on releasing:
 
 - The **PyPI push is irreversible** for a given filename — you cannot overwrite
-  `kpastro-0.1.3` once uploaded, so always bump the version for a new push.
+  `kpastro-0.3.0` once uploaded, so always bump the version for a new push.
 - `kpastro.__version__` is derived from installed distribution metadata, so the
   runtime version always matches the release.
 - The publish workflow uses the repo secret `PYPI_API_TOKEN` (Trusted

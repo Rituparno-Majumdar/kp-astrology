@@ -8,7 +8,7 @@ Highlights
 * Vimshottari dasha with nested birth balances (MD/AD/PD).
 * Planet -> house and house -> planet significators, ruling planets.
 * KP horary: the 249-division number system.
-* Birth-time rectification from dated life events, with credible intervals.
+* Birth-time rectification from dated life events, with posterior bands.
 """
 
 from . import vedic  # noqa: F401
@@ -60,7 +60,7 @@ from .vedic import format_longitude, point_info, sub_info, sub_sub_info  # noqa:
 
 from importlib.metadata import PackageNotFoundError, version
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 try:
     __version__ = version("kpastro")
 except PackageNotFoundError:

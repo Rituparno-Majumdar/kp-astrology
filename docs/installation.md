@@ -84,7 +84,7 @@ print(paths)                              # [PosixPath(...sepl_18.se1), ...]
 ## Verify the install
 
 ```bash
-kpastro --version              # prints e.g. kpastro 0.2.0
+kpastro --version              # prints e.g. kpastro 0.3.0
 kpastro ayanamsa --date 2026-08-20
 python -c "import kpastro; print(kpastro.__version__)"
 ```

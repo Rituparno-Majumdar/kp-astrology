@@ -71,9 +71,10 @@ def default_ephe_path() -> Path:
 
 
 #: Minimum plausible size (bytes) of a compressed ephemeris file.  The three
-#: files are 10-21 MB; anything below this is a truncated download or an HTML
-#: error page, not a valid ephemeris.
-_EPHE_MIN_BYTES = 1_000_000
+#: files in the aloistr/swisseph mirror are ~220 KB - 1.3 MB; anything far
+#: below 100 KB is an HTML error page, not a valid ephemeris.  (Truncated
+#: transfers are already rejected by urllib's IncompleteRead at read time.)
+_EPHE_MIN_BYTES = 100_000
 
 
 def download_ephemeris(target_dir: Optional[Path | str] = None) -> list[Path]:

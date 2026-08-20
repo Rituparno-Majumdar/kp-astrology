@@ -4,7 +4,7 @@ All notable changes to **kpastro** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [0.3.0] - 2026-08-20
 
 ### Fixed
 
@@ -21,6 +21,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   an ulp. Sub-lord/sub-sub lookup also gets a boundary tolerance and can no
   longer raise inside the last arc of a nakshatra, and `format_longitude` no
   longer prints `59'60"`.
+- **Ephemeris download** — the size guard now matches the compressed files in
+  the aloistr mirror (~220 KB - 1.3 MB), so `download-ephemeris` no longer
+  rejects valid downloads; it still refuses HTML/error bodies and writes
+  atomically.
 - **Chart day-lord** — computed from the local civil weekday (`birth.date`),
   not the UTC weekday, so charts near midnight no longer report the wrong
   ruling day-lord.
@@ -36,10 +40,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   validates houses (1-12) at construction; one shared validator is used by
   `rectify`/`score_candidate`/`transit_confirmation`.
 - **Robustness** — `BirthInfo` validates date, lat/lon and tz and rejects
-  polar latitudes (Placidus undefined); `download_ephemeris` writes atomically
-  and refuses truncated/error responses; the global sidereal mode is guarded
+  polar latitudes (Placidus undefined); the global sidereal mode is guarded
   by a lock; pre-1582 dates use the Julian calendar; `jd_ut` tolerates both
   `pyswisseph` return arities.
+- **CI** — matrix widened to CPython 3.9-3.13; `mkdocs build --strict` passes;
+  coverage floor of 85% enforced via `pytest-cov`.
 
 ### Changed
 
@@ -49,11 +54,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Performance: rectification hoists the slow planets/star lords out of the
   per-minute loop (only Moon + houses are recomputed per candidate); a shared
   `SCORING` block names every heuristic weight.
-- Tests: CLI suite added (previously 0% covered), coverage floor of 85%
-  enforced via `pytest-cov`, plus golden sub-sub, boundary, ayanamsa-mode,
-  snapshot-equivalence and single-event regression tests.
-- CI matrix widened to CPython 3.9-3.13; `mkdocs build --strict` passes; docs
-  version/matrix claims corrected.
+- Tests: CLI suite added (previously 0% covered) plus golden sub-sub,
+  boundary, ayanamsa-mode, snapshot-equivalence and single-event regression
+  tests; docs version/matrix claims corrected.
 
 ## [0.2.0] - 2026-08-20
 
