@@ -94,6 +94,48 @@ The ruling planets (RPs) of a moment are the sign / star / sub lords of the
 **ascendant**, the same three of the **Moon**, and the **day-lord** (weekday).
 `ruling_planets()` deduplicates and merges their sources.
 
+The rectification module uses the classic **five-lord** RP set instead: the
+day-lord plus the ascendant and Moon sign and star lords only.
+
+## Birth-time rectification
+
+The reference KP method (ported from the "timeofbirth" tool, K. P. systems)
+scores each candidate birth minute against the judged life events. Per house
+it builds a significator set:
+
+```
+sets[h] = { cusp sub-lord }  ∪  { occupants of h and their star-lords }
+                             ∪  { planets aspecting h and their star-lords }
+```
+
+KP aspects are house-based: every planet aspects the 7th house from itself;
+Mars adds the 4th and 8th, Jupiter the 5th and 9th, Saturn the 3rd and 10th.
+
+For a candidate whose lagna sub-lord is `l`:
+
+| Term | Formula |
+|------|---------|
+| Specificity | `spec = max(0, min(1, (12 − n) / 9))`, `n` = houses whose set contains `l` |
+| LSL (per event) | `2` per primary house + `1` per secondary house `l` appears in, × `spec` |
+| Dasha (per event) | `1 / 1 / 0.5` for MD/AD/PD lords in the primary house's set; `0.25` each for a secondary-house hit |
+| RP | `1` if `l` ∈ the five-lord RP set of the analysis moment (optional) |
+| Identity | `0.25` when the sibling hint matches house-3 occupancy (optional) |
+
+```
+total = lsl_score + 0.5 * dasha_score + rp_score + identity_score
+```
+
+Dasha lords at an event are anchored to the **candidate** birth moment and that
+moment's Moon (the original tool's convention). Events with `dasha_score < 1`
+are **strikes** (surfaced, not subtracted).
+
+The ranked score curve is converted to a probability distribution with a
+**softmax** (`temperature = 1.5`): `p ∝ exp((score − max) / 1.5)`. The
+**credible interval** covers the smallest contiguous span of time holding the
+target mass (default 75%). Jupiter/Saturn transits at each event date are
+checked separately as a cross-check (star- or sign-lord of the transit is a
+significator of the event's primary house).
+
 ## KP horary — why 249 divisions
 
 - 27 stars × 9 sub-lords = **243 subs** from 0° Aries.

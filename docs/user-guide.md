@@ -115,6 +115,13 @@ Downloads `sepl_18.se1`, `semo_18.se1`, `seas_18.se1` into `~/.kpastro/ephe`
 (or `--dir`). Subsequent calculations automatically use them. Already-present,
 non-empty files are skipped.
 
+## Rectification (Python API only)
+
+**Birth-time rectification** is not a CLI subcommand yet — use the Python API:
+`kpastro.rectify` + `kpastro.render_rectification` as shown in the
+[examples](examples.md#9-birth-time-rectification). It needs richer input (judged
+life events) than a flag list can comfortably express.
+
 ## Examples cookbook
 
 ```bash

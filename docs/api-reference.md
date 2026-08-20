@@ -20,6 +20,14 @@ from kpastro import *   # names listed under __all__
 | `Period` | dataclass | A dasha period (lord + start/end offsets in days + level) |
 | `HoraryDiv` | dataclass | One of the 249 KP horary divisions |
 | `RulingPlanet` | dataclass | A ruling planet and the sources it was found through |
+| `LifeEvent` | dataclass | A dated life event mapped to KP houses (rectification input) |
+| `IdentityInfo` | dataclass | Optional sibling hint for rectification |
+| `CandidateScore` | dataclass | Full score of one candidate birth instant |
+| `EventScore` | dataclass | Per-event breakdown of a candidate's score |
+| `RectificationResult` | dataclass | Full rectification scan, best candidate, credible interval |
+| `CredibleInterval` | dataclass | The posterior time-range around the best candidate |
+| `TransitConfirmation` | dataclass | Jupiter/Saturn transit cross-check over the events |
+| `EventTransit` | dataclass | Whether transit Jupiter/Saturn confirmed one event |
 | `SwissEphemeris` | class | Thin wrapper around the Swiss Ephemeris engine |
 | `vedic` | module | The pure-Python subdivision math (re-exported) |
 
@@ -39,6 +47,13 @@ from kpastro import *   # names listed under __all__
 | `planet_significations(positions, cusps) -> dict[str, list[Signification]]` | Grah Nirdeshan |
 | `house_significations(positions, cusps) -> list[list[tuple[str, int]]]` | Bhaav Nirdeshan with tiers |
 | `ruling_planets(ascendant_lon, moon_lon, weekday) -> list[RulingPlanet]` | RPs of a moment |
+| `rectify(birth, approx_time, events, window_min=60, step_min=1, ...)` | Scan for the most probable birth time (see below) |
+| `score_candidate(jd_ut, lat, lon, events, ...) -> CandidateScore` | Score a single candidate instant |
+| `aspects_from_house(house, planet) -> set[int]` | Houses aspected by a planet in a given house |
+| `house_significator_sets(positions, cusps) -> (dict, dict)` | Rectification-flavour per-house significators |
+| `transit_confirmation(jd_ut, lat, lon, events, ...) -> TransitConfirmation` | Jupiter/Saturn transit cross-check |
+| `credible_interval(candidates, target_mass=0.75) -> CredibleInterval` | Post-process the candidate scores into a time range |
+| `render_rectification(result, birth, limit=12) -> str` | Human-readable rectification report |
 | `point_info(lon) -> PointInfo` | Full KP breakdown of one sidereal longitude |
 | `sub_info(lon) -> SubInfo` / `sub_sub_info(lon) -> SubSubInfo` | Sub-lord chain lookup |
 | `format_longitude(lon, arcsec=True) -> str` | Render `D°MM'SS"` |
@@ -303,6 +318,101 @@ Ascendant/Moon sign/star/sub lords.
 ```
 Signification(house, by_occupation, by_sign_lordship, by_star_lord)
 RulingPlanet(planet, source)      # source e.g. "day lord", "asc sign lord, asc star lord"
+```
+
+<br>
+
+---
+
+## `kpastro.rectification` — birth-time rectification
+
+Recovers an approximate/unknown birth time from dated **life events** judged to
+fall in specific KP houses. Ported from the classic KP "time of birth" web tool
+and rebased on the Swiss Ephemeris. It is an **API feature** (not yet a CLI
+subcommand).
+
+### `LifeEvent`
+
+```python
+LifeEvent(date, primary, secondary=(), label="", time=time(12, 0))
+```
+
+- `date: datetime.date` — when the event happened (default moment is local noon).
+- `primary: int` — the main KP house (1–12) the event fell into.
+- `secondary: tuple[int, ...]` — extra houses the event also connected to.
+- `label: str` — free text shown in reports (e.g. "Marriage").
+- `.jd_ut(tz_hours, eph) -> float` — the event moment as a Julian date (UT).
+
+### `IdentityInfo`
+
+```python
+IdentityInfo(siblings=None)
+```
+
+A weak biographical hint: with siblings, house 3 is expected to be occupied; an
+only child usually has it empty. `None` disables the hint.
+
+### Scoring
+
+For every candidate minute `score_candidate` computes the KP significator set
+of each house (cusp sub-lord + occupants and their star-lords + aspecting
+planets and their star-lords) and the lagna sub-lord (LSL):
+
+```
+total = lsl_score + 0.5 * dasha_score + rp_score + identity_score
+```
+
+- **LSL** — +2 when the LSL is a significator of the event's primary house, +1
+  per secondary house it appears in, all scaled by the specificity weight
+  `max(0, min(1, (12 − n) / 9))` where `n` is how many houses the LSL
+  signifies (a "common" significator's testimony is weak).
+- **Dasha** — the mahadasha / antardasha / pratyantar lords running at the
+  event (anchored to the candidate birth moment) add `1 / 1 / 0.5` for a
+  primary-house hit and a quarter of that for a secondary-house hit. Events with
+  `dasha_score < 1` are reported as **strikes**.
+- **RP** — +1 if the LSL is in the classic five-lord ruling-planet set of the
+  analysis moment (day lord + asc/moon sign and star lords; optional).
+- **Identity** — +0.25 if the sibling hint is satisfied (optional).
+
+### Functions
+
+- `rectify(birth, approx_time, events, window_min=60.0, step_min=1.0, *,
+  use_rp=False, analysis_time=None, identity=None, ayanamsa="lahiri",
+  node="true", eph=None) -> RectificationResult` — scans
+  `±window_min` minutes around `approx_time` (a `datetime` or a `time` combined
+  with `birth.date`) in `step_min` steps and ranks every candidate.
+- `score_candidate(jd_ut, latitude, longitude, events, tz_hours=0.0,
+  rp_set=None, identity=None, eph=None, approx_jd=None, event_jds=None) -> CandidateScore` —
+  score one candidate instant directly.
+- `aspects_from_house(house, planet) -> set[int]` — houses aspected by a planet
+  sitting in a house (KP aspects: everyone takes the 7th; Mars adds 4th/8th,
+  Jupiter 5th/9th, Saturn 3rd/10th).
+- `house_significator_sets(positions, cusps, star_lord_cache=None)
+  -> (sets, house_map)` — the rectification-flavour per-house significators.
+- `transit_confirmation(jd_ut, latitude, longitude, events, tz_hours=0.0,
+  eph=None) -> TransitConfirmation` — counts how often transit Jupiter/Saturn
+  sit in a longitude whose star- or sign-lord is a significator of the event's
+  primary house (2 × `len(events)` checks; not folded into the score).
+- `credible_interval(candidates, target_mass=0.75) -> CredibleInterval` —
+  softmax over the scores (temperature 1.5), then the smallest contiguous time
+  span holding the target posterior mass.
+- `render_rectification(result, birth, limit=12) -> str` — the report.
+
+Rectification uses the **true** node by default (matching the reference tool);
+pass `node="mean"` for the traditional KP convention.
+
+### Output types
+
+```
+CandidateScore(jd_ut, offset_minutes, lsl, specificity, n_significating_houses,
+               lsl_score, dasha_score, rp_score, identity_score, total,
+               strikes, events)
+EventScore(label, date, primary, secondary, lsl_score, lsl_hit, dasha_score,
+           dasha_hit, mahadasha_lord, antardasha_lord, pratyantar_lord)
+RectificationResult(approx_ut, candidates, best, credible, settings, events)
+CredibleInterval(start_ut, end_ut, peak_ut, mass, spread_minutes)
+TransitConfirmation(matched, total, per_event)
+EventTransit(label, date, jupiter, saturn)
 ```
 
 <br>

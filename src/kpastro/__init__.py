@@ -8,6 +8,7 @@ Highlights
 * Vimshottari dasha with nested birth balances (MD/AD/PD).
 * Planet -> house and house -> planet significators, ruling planets.
 * KP horary: the 249-division number system.
+* Birth-time rectification from dated life events, with credible intervals.
 """
 
 from . import vedic  # noqa: F401
@@ -32,6 +33,23 @@ from .horary import (  # noqa: F401
     kp_divisions,
     kp_number_for_longitude,
 )
+from .rectification import (  # noqa: F401
+    CredibleInterval,
+    CandidateScore,
+    EventScore,
+    EventTransit,
+    IdentityInfo,
+    LifeEvent,
+    RectificationResult,
+    TransitConfirmation,
+    aspects_from_house,
+    credible_interval,
+    house_significator_sets,
+    rectify,
+    render_rectification,
+    score_candidate,
+    transit_confirmation,
+)
 from .significators import (  # noqa: F401
     RulingPlanet,
     house_significations,
@@ -42,7 +60,7 @@ from .vedic import format_longitude, point_info, sub_info, sub_sub_info  # noqa:
 
 from importlib.metadata import PackageNotFoundError, version
 
-__version__ = "0.1.4"
+__version__ = "0.2.0"
 try:
     __version__ = version("kpastro")
 except PackageNotFoundError:
@@ -51,28 +69,42 @@ except PackageNotFoundError:
 __all__ = [
     "Balance",
     "BirthInfo",
+    "CandidateScore",
     "Chart",
+    "CredibleInterval",
+    "EventScore",
+    "EventTransit",
     "HoraryDiv",
+    "IdentityInfo",
+    "LifeEvent",
     "Period",
+    "RectificationResult",
     "RulingPlanet",
     "SwissEphemeris",
+    "TransitConfirmation",
     "antardashas_of",
     "ascendant_from_kp_number",
+    "aspects_from_house",
     "compute_chart",
+    "credible_interval",
     "current_periods",
     "dasha_balance",
     "download_ephemeris",
     "ephemeris_version",
     "format_longitude",
     "house_significations",
+    "house_significator_sets",
     "kp_divisions",
     "kp_number_for_longitude",
     "mahadasha_timeline",
     "planet_significations",
     "point_info",
+    "rectify",
     "render_chart",
+    "render_rectification",
     "ruling_planets",
+    "score_candidate",
     "sub_info",
     "sub_sub_info",
-    "vedic",
+    "transit_confirmation",
 ]

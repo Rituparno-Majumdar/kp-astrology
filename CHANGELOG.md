@@ -4,6 +4,25 @@ All notable changes to **kpastro** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.2.0] - 2026-08-20
+
+- **New: birth-time rectification** (`kpastro.rectification`) — the classic KP
+  "time of birth" method, ported from the reference web tool and rebased on the
+  Swiss Ephemeris. Given an approximate birth time and dated life events mapped
+  to KP houses, it scans a window minute-by-minute and scores every candidate
+  by lagna sub-lord hit rate, Vimshottari dasha confirmation, the optional
+  ruling-planet test and an optional sibling (identity) hint.
+- Output is a ranked candidate list plus a **credible interval** (softmax over
+  scores, temperature 1.5) so the headline is an honest time *range*, and a
+  Jupiter/Saturn **transit confirmation** cross-check.
+- New public names: `rectify`, `score_candidate`, `LifeEvent`, `IdentityInfo`,
+  `CandidateScore`, `EventScore`, `RectificationResult`, `CredibleInterval`,
+  `TransitConfirmation`, `EventTransit`, `aspects_from_house`,
+  `house_significator_sets`, `transit_confirmation`, `credible_interval`,
+  `render_rectification`.
+- Docs: rectification covered in the feature table, examples, mathematics and
+  API reference.
+
 ## [0.1.5] - 2026-08-20
 
 - Fix: multiple `SwissEphemeris` instances with different ayanamsa modes no longer

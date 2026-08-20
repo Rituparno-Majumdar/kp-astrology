@@ -25,6 +25,7 @@ Krishnamurti Paddhati (KP) is a stellar system of Vedic astrology developed by P
 - **Significators** — Grah and Bhaav Nirdeshan: house and planet significators with 4-tier ranking.
 - **Ruling planets** — day-lord, ascendant-lord and Moon-lord for the moment.
 - **KP horary** — the 1-249 division number system with the horary ascendant taken as the division midpoint.
+- **Birth-time rectification** — recover an unknown/approximate birth time from dated life events judged to fall in specific KP houses; each candidate minute is scored by lagna sub-lord + dasha + ruling-planet + sibling tests, with a credible-interval range and a Jupiter/Saturn transit cross-check.
 - **CLI + Python API** — everything available as a typed library *and* as a `kpastro` command-line tool.
 
 ## Install
@@ -82,6 +83,30 @@ q = ascendant_from_kp_number(45)      # dict with ascendant + lord chain
 
 `chart.planets`, `chart.cusps`, `chart.balance`, `chart.mahadashas`, `chart.current`,
 `chart.planet_significators` and `chart.ruling` give typed access to every KP layer.
+
+### Birth-time rectification
+
+When only an approximate birth time is known, dated life events mapped to KP
+houses can recover it:
+
+```python
+from datetime import date, time
+from kpastro import BirthInfo, LifeEvent, rectify, render_rectification
+
+birth = BirthInfo(date(1990, 1, 15), time(14, 30),
+                  28.6139, 77.2090, 5.5, "New Delhi")  # time is approximate
+events = [
+    LifeEvent(date(1995, 9, 3),  2, (), "School admission"),
+    LifeEvent(date(2007, 4, 1),  4, (), "Joined college"),
+    LifeEvent(date(2013, 2, 14), 4, (), "First job"),
+    LifeEvent(date(2018, 1, 20), 7, (), "Marriage"),
+]
+result = rectify(birth, time(14, 30), events)   # scans +/-60 min at 1-min steps
+print(render_rectification(result, birth))
+```
+
+`result.best` is the top-scoring birth time, `result.credible` the 75%-mass
+time range, and `result.candidates` the full ranked scan.
 
 ## The mathematics
 
@@ -154,6 +179,7 @@ src/kpastro/
   chart.py          BirthInfo, compute_chart, render_chart
   dasha.py          Vimshottari balances, timelines, sub-periods
   significators.py  Grah & Bhaav Nirdeshan, ruling planets
+  rectification.py  birth-time rectification (KP "time of birth" method)
   horary.py         the 249-division KP number system
   cli.py            argparse CLI (natal / horary / dasha / ayanamsa / ...)
 ```
@@ -163,6 +189,7 @@ src/kpastro/
 - [ ] Full dasha view with all 120 sub-periods and transit overlays.
 - [ ] Navamsa and other vargas in the KP scheme.
 - [ ] KP year (KPY) and Saturn-return timing helpers.
+- [ ] CLI subcommand for birth-time rectification.
 - [ ] Western-style event chart export (JSON / CSV).
 - [ ] Optional TinyDB/Pandas output and Jupyter notebooks.
 - [ ] Contribution-driven: more ayanamsa modes, house systems, node options.

@@ -47,6 +47,15 @@ house, the planets judging it, ranked by the 4-tier strength system. The
 split it, yielding 249 numbered divisions. The horary ascendant is the midpoint
 of the chosen division.
 
+**Q: Can `kpastro` find an unknown birth time?**
+
+Yes — see [rectification](examples.md#9-birth-time-rectification). Give it the
+approximate time plus a few dated life events judged to specific KP houses; it
+scans `±window` minutes minute-by-minute, scoring each candidate by lagna
+sub-lord hits, Vimshottari dasha confirmation, optional ruling-planet and
+sibling tests, and reports a credible time *range* alongside the best minute.
+It is a Python API feature (not yet a CLI subcommand).
+
 ## Usage
 
 **Q: `kpastro` isn't on PATH after install.**

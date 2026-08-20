@@ -3,12 +3,14 @@
 All examples below assume:
 
 ```python
-from datetime import date, time
+from datetime import date, datetime, time, timedelta
 from kpastro import (
     BirthInfo, compute_chart, render_chart,
     kp_divisions, ascendant_from_kp_number, kp_number_for_longitude,
     dasha_balance, current_periods, planet_significations,
     house_significations, ruling_planets, point_info,
+    LifeEvent, IdentityInfo, rectify, render_rectification,
+    transit_confirmation,
     download_ephemeris,
 )
 ```
@@ -135,3 +137,54 @@ print("Data files:", [p.name for p in paths])
 
 After the files are present, all computations silently use the full-precision
 VSOP87 / JPL DE431 ephemeris.
+
+## 9. Birth-time rectification
+
+Only the approximate birth time is known. Dated life events are mapped to the
+KP houses they fell into, and the scanner finds the most probable minute:
+
+```python
+from kpastro import BirthInfo, LifeEvent, IdentityInfo, rectify, render_rectification
+
+birth = BirthInfo(
+    date(1990, 1, 15), time(14, 30),   # approximate time
+    28.6139, 77.2090, 5.5, "New Delhi",
+)
+
+events = [
+    LifeEvent(date(1995, 9, 3),  2, (), "School admission"),
+    LifeEvent(date(2007, 4, 1),  4, (), "Joined college"),
+    LifeEvent(date(2013, 2, 14), 4, (), "First job"),
+    LifeEvent(date(2018, 1, 20), 7, (), "Marriage"),
+]
+
+result = rectify(birth, time(14, 30), events,
+                 window_min=60, step_min=1,
+                 use_rp=True,
+                 identity=IdentityInfo(siblings=1),
+                 analysis_time=datetime(2026, 1, 1, 12, 0))
+
+print(render_rectification(result, birth))
+
+# Typed access instead of the text report:
+best = result.best
+print(f"Best birth time: {best.lsl} total={best.total:.2f} strikes={best.strikes}")
+ci = result.credible
+# credible._ut fields are UTC datetimes; convert to local (IST here) for display
+tz = timedelta(hours=birth.tz_hours)
+print(f"Credible range: {(ci.start_ut + tz):%H:%M} - {(ci.end_ut + tz):%H:%M} "
+      f"local ({ci.mass:.0%} mass)")
+# every ranked candidate, in order
+for c in result.candidates[:5]:
+    print(f"{c.offset_minutes:+5.0f} min  {c.lsl:<8} total={c.total:.2f}")
+```
+
+`events` need only be dated and judged to a primary house (1–12) plus optional
+secondary houses. Add `transit_confirmation` for the Jupiter/Saturn
+cross-check:
+
+```python
+conf = transit_confirmation(best.jd_ut, birth.latitude, birth.longitude,
+                            events, tz_hours=birth.tz_hours)
+print(f"Jupiter/Saturn transit confirmations: {conf.matched}/{conf.total}")
+```

@@ -16,6 +16,7 @@ kp-astrology/
     chart.py          BirthInfo, compute_chart, render_chart
     dasha.py          Vimshottari balances, timelines, sub-periods
     significators.py  Grah & Bhaav Nirdeshan, ruling planets
+    rectification.py  birth-time rectification (KP "time of birth" method)
     horary.py         the 249-division KP number system
     cli.py            argparse CLI (natal / horary / dasha / ayanamsa / ...)
   tests/              pytest suite

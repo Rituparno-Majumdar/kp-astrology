@@ -34,6 +34,7 @@ print(render_chart(chart))
 | Significators | Grah (planet→house) and Bhaav (house→planet) Nirdeshan with 4-tier strength, cusp sub-lords |
 | Ruling planets | Day-lord + Ascendant/Moon sign/star/sub lords |
 | Horary | The complete 1–249 KP division system with division-midpoint ascendants |
+| Rectification | Recover an approximate birth time from dated life events: lagna sub-lord + dasha scoring, credible-interval range, Jupiter/Saturn transit cross-check |
 | Precision | Full JPL/VSOP87 Swiss Ephemeris when data files are installed; silent Moshier fallback otherwise |
 | Interfaces | Typed Python API, `python -m kpastro`, and a `kpastro` console script |
 
@@ -51,7 +52,7 @@ download the full-precision ephemeris files.
 
 - **[Installation](installation.md)** — install, requirements, ephemeris data files
 - **[User guide](user-guide.md)** — the command-line interface in depth
-- **[Examples](examples.md)** — real Python API usage
+- **[Examples](examples.md)** — real Python API usage, including birth-time rectification
 - **[API reference](api-reference.md)** — every public function, class and constant
 - **[Mathematics](mathematics.md)** — the KP conventions implemented, with formulas
 - **[Development](development.md)** — setting up, testing, releasing
