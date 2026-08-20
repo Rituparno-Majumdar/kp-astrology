@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install package and dev extras
+        run: pip install -e ".[dev]"
+
+      - name: Install pyswisseph
+        run: pip install pyswisseph
+
+      - name: Run test suite
+        run: python -m pytest
+
+      - name: Download ephemeris + smoke test CLI
+        shell: bash
+        run: |
+          python -m kpastro download-ephemeris
+          python -m kpastro ayanamsa --date 2026-08-20
+          python -m kpastro natal --date 1990-01-15 --time 14:30 --tz 5.5 \
+            --lat 28.6139 --lon 77.2090 --place "New Delhi" | head -n 5
