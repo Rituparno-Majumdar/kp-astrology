@@ -4,6 +4,13 @@ All notable changes to **kpastro** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.1.5] - 2026-08-20
+
+- Fix: multiple `SwissEphemeris` instances with different ayanamsa modes no longer
+  override each other. The sidereal mode is process-global engine state, so the
+  "apply only on change" optimisation now tracks the mode actually applied to the
+  engine at module level instead of per instance.
+
 ## [0.1.4] - 2026-08-20
 
 - Performance: memoize the KP horary division table; `kp_number_for_longitude` now
