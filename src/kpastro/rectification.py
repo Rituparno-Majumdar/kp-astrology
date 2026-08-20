@@ -24,8 +24,12 @@ The algorithm is a faithful port of the classic KP web rectification tool
   3rd house occupied; an only child usually has it empty (+0.25, weak).
 
 The total score is ``lsl + 0.5 * dasha + rp + identity``.  The score curve is
-then turned into a **credible interval** via a softmax (temperature 1.5) so
-the honest headline is a range of times, not a single minute.
+then turned into a **posterior band** (historically called "credible
+interval") via a softmax (temperature 1.5); it is the shortest contiguous
+time span holding a target share of the mass.  Note this is NOT a statistical
+credible interval -- there is no likelihood or prior -- it is a descriptive
+band over the scanned 1-minute grid that reports which minutes dominate the
+score.
 
 Remarks on faithfulness
 -----------------------
@@ -43,14 +47,14 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass
-from datetime import date as DateType, datetime, time as TimeType, timedelta
+from datetime import date as DateType, datetime, time as TimeType, timedelta, timezone
 from typing import Iterable, Optional
 
 from .constants import SIGN_LORDS, WEEKDAY_LORDS
 from .dasha import current_periods
 from .ephemeris import SwissEphemeris
 from .significators import house_of_longitude
-from .vedic import sign_name, star_lord, sub_lord
+from .vedic import normalize_longitude, sign_name, star_lord, sub_lord
 
 #: The nine grahas in KP output order.
 PLANETS: tuple[str, ...] = (
@@ -63,6 +67,31 @@ _J2000_UTC_NOON = datetime(2000, 1, 1, 12, 0)
 
 #: Transit planets checked by :func:`transit_confirmation`.
 TRANSIT_PLANETS: tuple[str, str] = ("Jupiter", "Saturn")
+
+#: Score weights of the rectification heuristic, extracted so they are named
+#: and auditable.  Values match the classic KP "timeofbirth" port; they are
+#: heuristics, not calibrated against a held-out dataset.
+SCORING: dict[str, float] = {
+    # LSL (lagna sub-lord) testimony for the event's primary / secondary houses.
+    "lsl_primary": 2.0,
+    "lsl_secondary": 1.0,
+    # Specificity discount: 1 - (n_signifying_houses - 3) / 9, clamped [0, 1].
+    "specificity_floor_index": 3.0,
+    "specificity_scale": 9.0,
+    # Dasha confirmations: full weight for MD and AD, half for PD.
+    "dasha_md_ad_weight": 1.0,
+    "dasha_pd_weight": 0.5,
+    # Any dasha lord matching a *secondary* house counts a quarter weight.
+    "dasha_secondary_weight": 0.25,
+    # Dasha testimony share of the total: total = lsl + share * dasha + ...
+    "dasha_share": 0.5,
+    # Ruling-planet bonus and weak identity (siblings) hint.
+    "rp_bonus": 1.0,
+    "identity_bonus": 0.25,
+    # Posterior-band softmax temperature and target mass.
+    "softmax_temperature": 1.5,
+    "target_mass": 0.75,
+}
 
 
 # ---------------------------------------------------------------------------
@@ -84,6 +113,13 @@ class LifeEvent:
     secondary: tuple[int, ...] = ()
     label: str = ""
     time: TimeType = TimeType(12, 0)
+
+    def __post_init__(self) -> None:
+        try:
+            datetime.combine(self.date, self.time)
+        except (TypeError, ValueError) as exc:
+            raise ValueError(f"event {self!r} has an invalid date/time") from exc
+        validate_houses(self.primary, self.secondary)
 
     def jd_ut(self, tz_hours: float, eph: SwissEphemeris) -> float:
         """Julian date (UT) of the event moment."""
@@ -139,13 +175,20 @@ class CandidateScore:
 
 @dataclass(frozen=True)
 class CredibleInterval:
-    """A posterior interval over candidate times (softmax temperature 1.5)."""
+    """Shortest contiguous time band holding `target_mass` of the softmax mass.
+
+    This is a descriptive posterior band over the scanned minute grid (see
+    :func:`credible_interval`) -- NOT a statistical credible interval: there is
+    no likelihood or prior.  ``mass >= target_mass`` holds by construction.
+    """
 
     start_ut: datetime
     end_ut: datetime
     peak_ut: datetime            # candidate with the highest score
     mass: float                  # posterior weight covered by [start, end]
     spread_minutes: float
+    temperature: float = 1.5     # softmax temperature used to build the mass
+    target_mass: float = 0.75    # requested mass share
 
 
 @dataclass(frozen=True)
@@ -177,6 +220,29 @@ class RectificationResult:
     credible: CredibleInterval
     settings: dict
     events: tuple[LifeEvent, ...]
+    transit: Optional[TransitConfirmation] = None   # Jupiter/Saturn cross-check
+
+
+# ---------------------------------------------------------------------------
+# Validation + shared ordering
+# ---------------------------------------------------------------------------
+
+def validate_houses(primary: int, secondary: tuple[int, ...]) -> None:
+    """Raise :class:`ValueError` unless the house numbers are 1..12.
+
+    Used by :class:`LifeEvent` construction and by the scan functions so every
+    entry path shares one validator.
+    """
+    if not 1 <= primary <= 12:
+        raise ValueError(f"invalid primary house {primary!r}: must be 1-12")
+    for h in secondary:
+        if not 1 <= h <= 12:
+            raise ValueError(f"invalid secondary house {h!r}: must be 1-12")
+
+
+def _candidate_sort_key(c: "CandidateScore") -> tuple:
+    """Single, deterministic ordering shared by ``best`` and the posterior band."""
+    return (-c.total, -c.lsl_score, abs(c.offset_minutes))
 
 
 # ---------------------------------------------------------------------------
@@ -212,7 +278,8 @@ def house_significator_sets(
 
     For each of the 12 houses:
 
-    * the house cusp's **sub-lord** (the KP house lord),
+    * the house cusp's **sub-lord** (the KP house lord) and **sign-lord**
+      (ownership -- primary in Bhaav Nirdeshan),
     * every planet **occupying** the house, and its **star-lord**,
     * every planet **aspecting** the house (by KP aspect), and its star-lord.
 
@@ -226,6 +293,7 @@ def house_significator_sets(
     sets: dict[int, set[str]] = {h: set() for h in range(1, 13)}
     for h in range(1, 13):
         sets[h].add(sub_lord(cusps[h - 1]))
+        sets[h].add(SIGN_LORDS[sign_name(cusps[h - 1])])
     for planet, house in house_map.items():
         sets[house].add(planet)
         sets[house].add(slc[planet])
@@ -269,13 +337,17 @@ def _ruling_planet_set(
     latitude: float,
     longitude: float,
     eph: SwissEphemeris,
+    tz_hours: float = 0.0,
 ) -> set[str]:
-    """Classic five-lord RP set of a moment (day + asc/moon sign and star lords)."""
+    """Classic five-lord RP set of a moment (day + asc/moon sign and star lords).
+
+    The day-lord follows the **local** civil weekday at the moment, computed
+    from ``tz_hours``, not the UTC weekday.
+    """
     positions, cusps, asc = _chart_for(jd_ut, latitude, longitude, eph)
     moon_lon = positions["Moon"]
-    # Julian-day weekday with 0 = Sunday (the reference algorithm's formula).
-    js_weekday = math.floor(jd_ut + 1.5) % 7
-    day_lord = WEEKDAY_LORDS[(js_weekday + 6) % 7]  # WEEKDAY_LORDS is Monday-first
+    local = _datetime_from_jd(jd_ut) + timedelta(hours=tz_hours)
+    day_lord = WEEKDAY_LORDS[local.weekday() % 7]  # WEEKDAY_LORDS is Monday-first
     return {
         day_lord,
         SIGN_LORDS[sign_name(moon_lon)],
@@ -289,6 +361,29 @@ def _ruling_planet_set(
 # Scoring
 # ---------------------------------------------------------------------------
 
+def _scan_snapshot(
+    jd_ut: float,
+    eph: SwissEphemeris,
+) -> tuple[float, dict[str, tuple[float, float]], dict[str, str]]:
+    """Precompute what is constant across a ±60 minute scan.
+
+    Only the Moon and the house cusps/ascendant change meaningfully across the
+    scan window; the other planets move less than their sub-lord resolution.
+    Returns ``(ayanamsa, slow positions sidereal+speed, star-lord cache)`` so a
+    candidate needs only a Moon position + house computation per minute instead
+    of a full 9-body ephemeris recalculation.
+    """
+    slow: dict[str, tuple[float, float]] = {}
+    star_cache: dict[str, str] = {}
+    for name, (lon, speed) in eph.tropical_positions(jd_ut).items():
+        if name == "Moon":
+            continue
+        sid = normalize_longitude(lon - eph.ayanamsa(jd_ut))
+        slow[name] = (sid, speed)
+        star_cache[name] = star_lord(sid)
+    return eph.ayanamsa(jd_ut), slow, star_cache
+
+
 def score_candidate(
     jd_ut: float,
     latitude: float,
@@ -300,11 +395,15 @@ def score_candidate(
     eph: Optional[SwissEphemeris] = None,
     approx_jd: Optional[float] = None,
     event_jds: Optional[tuple[float, ...]] = None,
+    _snapshot: Optional[tuple[float, dict[str, tuple[float, float]], dict[str, str]]] = None,
 ) -> CandidateScore:
     """Score a single candidate birth instant against the events.
 
     ``events`` are the judged life events; ``tz_hours`` converts their local
     dates to UTC.  ``rp_set`` and ``identity`` are optional weak signals.
+    ``_snapshot`` is an internal optimisation supplied by :func:`rectify`; it
+    pre-seeds the slow planets and star lords so each candidate only
+    recomputes Moon + houses.
     """
     eph = eph or SwissEphemeris()
     events = tuple(events)
@@ -314,17 +413,33 @@ def score_candidate(
         event_jds = tuple(ev.jd_ut(tz_hours, eph) for ev in events)
     if len(event_jds) != len(events):
         raise ValueError("event_jds must align one-to-one with events")
+    for ev, ev_jd in zip(events, event_jds):
+        if ev_jd < jd_ut:
+            raise ValueError(
+                f"event {ev!r} (jd {ev_jd:.2f}) predates the candidate birth "
+                f"time (jd {jd_ut:.2f}); the dasha timeline cannot reach it"
+            )
 
-    positions, cusps, asc = _chart_for(jd_ut, latitude, longitude, eph)
-    star_cache = {p: star_lord(lon) for p, lon in positions.items()}
+    if _snapshot is not None:
+        _ayan, slow_positions, star_cache = _snapshot
+        cusps, asc, _mc, _armc = eph.houses(jd_ut, latitude, longitude)
+        moon_lon, _moon_speed = eph.body(jd_ut, "Moon")
+        positions = {name: lon for name, (lon, _speed) in slow_positions.items()}
+        positions["Moon"] = moon_lon
+        star_cache = dict(star_cache)
+        star_cache["Moon"] = star_lord(moon_lon)
+    else:
+        positions, cusps, asc = _chart_for(jd_ut, latitude, longitude, eph)
+        moon_lon = positions["Moon"]
+        star_cache = {p: star_lord(lon) for p, lon in positions.items()}
+
     sigs, house_map = house_significator_sets(positions, cusps, star_cache)
 
     lsl = sub_lord(asc)
     n_sig = sum(1 for house_set in sigs.values() if lsl in house_set)
-    spec = min(1.0, max(0.0, (12 - n_sig) / 9.0))
+    spec = min(1.0, max(0.0, (12 - n_sig) / SCORING["specificity_scale"]))
 
     epoch = _datetime_from_jd(jd_ut)
-    moon_lon = positions["Moon"]
 
     event_scores: list[EventScore] = []
     lsl_total = 0.0
@@ -332,11 +447,11 @@ def score_candidate(
     for ev, ev_jd in zip(events, event_jds):
         ev_lsl = 0.0
         if ev.primary:
-            if lsl in sigs[ev.primary]:
-                ev_lsl += 2.0
+            if lsl in sigs.get(ev.primary, frozenset()):
+                ev_lsl += SCORING["lsl_primary"]
             for h in ev.secondary:
-                if lsl in sigs[h]:
-                    ev_lsl += 1.0
+                if lsl in sigs.get(h, frozenset()):
+                    ev_lsl += SCORING["lsl_secondary"]
         ev_lsl *= spec
         lsl_total += ev_lsl
 
@@ -347,15 +462,22 @@ def score_candidate(
             md = per[1].lord
             ad = per[2].lord
             pd = per.get(3).lord if per.get(3) is not None else ""
-        except ValueError:
-            pass  # event before birth or beyond the timeline: no dasha testimony
-        for lord, weight in ((md, 1.0), (ad, 1.0), (pd, 0.5)):
+        except ValueError as exc:
+            raise ValueError(
+                f"event {ev!r} lies outside the dasha timeline of the candidate "
+                f"birth time: {exc}"
+            ) from exc
+        for lord, weight in (
+            (md, SCORING["dasha_md_ad_weight"]),
+            (ad, SCORING["dasha_md_ad_weight"]),
+            (pd, SCORING["dasha_pd_weight"]),
+        ):
             if not lord:
                 continue
-            if ev.primary and lord in sigs[ev.primary]:
+            if ev.primary and lord in sigs.get(ev.primary, frozenset()):
                 ev_dash += weight
-            elif ev.secondary and any(lord in sigs[h] for h in ev.secondary):
-                ev_dash += 0.25
+            elif ev.secondary and any(lord in sigs.get(h, frozenset()) for h in ev.secondary):
+                ev_dash += SCORING["dasha_secondary_weight"]
         dasha_total += ev_dash
 
         event_scores.append(
@@ -374,18 +496,23 @@ def score_candidate(
             )
         )
 
-    rp_score = 1.0 if rp_set is not None and lsl in rp_set else 0.0
+    rp_score = SCORING["rp_bonus"] if rp_set is not None and lsl in rp_set else 0.0
 
     identity_score = 0.0
     if identity is not None and identity.siblings is not None:
         occ3 = sum(1 for house in house_map.values() if house == 3)
         if identity.siblings > 0 and occ3 >= 1:
-            identity_score += 0.25
+            identity_score += SCORING["identity_bonus"]
         if identity.siblings == 0 and occ3 == 0:
-            identity_score += 0.25
+            identity_score += SCORING["identity_bonus"]
 
     strikes = sum(1 for es in event_scores if es.dasha_score < 1.0)
-    total = lsl_total + 0.5 * dasha_total + rp_score + identity_score
+    total = (
+        lsl_total
+        + SCORING["dasha_share"] * dasha_total
+        + rp_score
+        + identity_score
+    )
     offset = 0.0 if approx_jd is None else (jd_ut - approx_jd) * 1440.0
 
     return CandidateScore(
@@ -430,22 +557,31 @@ def rectify(
     if not events:
         raise ValueError("at least one LifeEvent is required")
     for ev in events:
-        if not 1 <= ev.primary <= 12:
-            raise ValueError(f"event {ev!r} has an invalid primary house")
-        if any(not 1 <= h <= 12 for h in ev.secondary):
-            raise ValueError(f"event {ev!r} has an invalid secondary house")
+        validate_houses(ev.primary, ev.secondary)
 
     local_approx = _coerce_local(approx_time, birth)
     approx_ut = local_approx - timedelta(hours=birth.tz_hours)
     approx_jd = eph.jd_ut(approx_ut)
     event_jds = tuple(ev.jd_ut(birth.tz_hours, eph) for ev in events)
+    earliest_candidate = approx_jd - window_min / 1440.0
+    for ev, ev_jd in zip(events, event_jds):
+        if ev_jd < earliest_candidate:
+            raise ValueError(
+                f"event {ev!r} ({ev.date}) predates the earliest candidate birth "
+                f"time; the dasha timeline cannot reach it"
+            )
 
     rp_set = None
     if use_rp:
-        an_local = _coerce_local(analysis_time or datetime.utcnow(), birth)
+        an_local = _coerce_local(
+            analysis_time or datetime.now(timezone.utc).replace(tzinfo=None), birth
+        )
         an_jd = eph.jd_ut(an_local - timedelta(hours=birth.tz_hours))
-        rp_set = _ruling_planet_set(an_jd, birth.latitude, birth.longitude, eph)
+        rp_set = _ruling_planet_set(
+            an_jd, birth.latitude, birth.longitude, eph, birth.tz_hours
+        )
 
+    snapshot = _scan_snapshot(approx_jd, eph)
     n_steps = max(1, round(window_min * 2.0 / step_min))
     candidates: list[CandidateScore] = []
     for s in range(n_steps + 1):
@@ -462,15 +598,22 @@ def rectify(
                 eph=eph,
                 approx_jd=approx_jd,
                 event_jds=event_jds,
+                _snapshot=snapshot,
             )
         )
 
-    candidates.sort(
-        key=lambda c: (-c.total, -c.lsl_score, abs(c.offset_minutes))
-    )
+    candidates.sort(key=_candidate_sort_key)
 
     best = candidates[0]
     credible = credible_interval(candidates)
+    transit = transit_confirmation(
+        best.jd_ut,
+        birth.latitude,
+        birth.longitude,
+        events,
+        tz_hours=birth.tz_hours,
+        eph=eph,
+    )
     return RectificationResult(
         approx_ut=approx_ut,
         candidates=tuple(candidates),
@@ -485,6 +628,7 @@ def rectify(
             "candidates": len(candidates),
         },
         events=events,
+        transit=transit,
     )
 
 
@@ -548,32 +692,66 @@ def credible_interval(
     cands = tuple(candidates)
     if not cands:
         raise ValueError("no candidates to build a credible interval from")
+    temperature = float(SCORING["softmax_temperature"])
+    target_mass = float(target_mass or SCORING["target_mass"])
+
     scores = [c.total for c in cands]
     peak = max(scores)
-    weights = [math.exp((s - peak) / 1.5) for s in scores]
+    weights = [math.exp((s - peak) / temperature) for s in scores]
     total = sum(weights)
-    prob_by_jd = {c.jd_ut: w / total for c, w in zip(cands, weights)}
+    probs = [w / total for w in weights]
 
-    order = sorted(range(len(cands)), key=lambda i: weights[i], reverse=True)
-    taken: list[int] = []
+    # Time-ordered + cumulative weight for the single sliding pass.
+    order = sorted(range(len(cands)), key=lambda i: cands[i].jd_ut)
     acc = 0.0
-    for i in order:
-        taken.append(i)
-        acc += weights[i] / total
+    j = 0
+    best_span = math.inf
+    best_lo = best_hi = None
+    best_mass = 0.0
+    for i in range(len(order)):
+        while j < len(order) and acc < target_mass:
+            acc += probs[order[j]]
+            j += 1
         if acc >= target_mass:
-            break
+            lo_idx, hi_idx = i, j - 1
+            span = cands[order[hi_idx]].jd_ut - cands[order[lo_idx]].jd_ut
+            if span < best_span - 1e-12 or (
+                abs(span - best_span) <= 1e-12 and acc > best_mass
+            ):
+                best_span = span
+                best_lo, best_hi, best_mass = lo_idx, hi_idx, acc
+        acc -= probs[order[i]]
 
-    jds = [cands[i].jd_ut for i in taken]
-    lo, hi = min(jds), max(jds)
+    if best_lo is None:
+        # target_mass impossible (single candidate or mass < requested share).
+        best_lo, best_hi = 0, len(order) - 1
+        best_mass = 1.0
+
+    # The band must contain the peak candidate (the highest-scored minute), so
+    # expand the chosen window outward to include it.
+    peak_cand = sorted(cands, key=_candidate_sort_key)[0]
+    peak_pos = order.index(cands.index(peak_cand))
+    if peak_pos < best_lo:
+        best_lo = peak_pos
+    elif peak_pos > best_hi:
+        best_hi = peak_pos
+
+    lo_jd = cands[order[best_lo]].jd_ut
+    hi_jd = cands[order[best_hi]].jd_ut
     mass = sum(
-        p for jd, p in prob_by_jd.items() if lo - 1e-9 <= jd <= hi + 1e-9
+        probs[idx]
+        for idx in order
+        if lo_jd - 1e-9 <= cands[idx].jd_ut <= hi_jd + 1e-9
     )
+
     return CredibleInterval(
-        start_ut=_datetime_from_jd(lo),
-        end_ut=_datetime_from_jd(hi),
-        peak_ut=_datetime_from_jd(cands[order[0]].jd_ut),
+        start_ut=_datetime_from_jd(lo_jd),
+        end_ut=_datetime_from_jd(hi_jd),
+        peak_ut=_datetime_from_jd(peak_cand.jd_ut),
         mass=mass,
-        spread_minutes=(hi - lo) * 1440.0,
+        spread_minutes=(hi_jd - lo_jd) * 1440.0,
+        temperature=temperature,
+        target_mass=target_mass,
     )
 
 
@@ -612,9 +790,14 @@ def render_rectification(result: RectificationResult, birth, limit: int = 12) ->
 
     ci = result.credible
     out.append(
-        f" Credible range ({ci.mass:.0%} mass): "
+        f" Posterior band ({ci.mass:.0%} mass of {ci.target_mass:.0%} target, "
+        f"T={ci.temperature:g}): "
         f"{_fmt_full(_dt_local(ci.start_ut, tz))} - {_fmt_full(_dt_local(ci.end_ut, tz))}   "
         f"peak {_fmt_full(_dt_local(ci.peak_ut, tz))}   (spread {ci.spread_minutes:.0f} min)"
+    )
+    out.append(
+        "   (descriptive softmax band over the scanned grid, NOT a statistical "
+        "credible interval)"
     )
     out.append("")
 
@@ -654,6 +837,18 @@ def render_rectification(result: RectificationResult, birth, limit: int = 12) ->
             f"{'hit' if es.dasha_hit else 'miss':>6}"
         )
     out.append("")
+
+    if result.transit is not None:
+        t = result.transit
+        out.append(" Jupiter/Saturn transit cross-check (independent of the score):")
+        out.append(f"  confirmed {t.matched}/{t.total} transit tests")
+        for et in t.per_event:
+            out.append(
+                f"    {(et.label or 'event'):<24} {et.date:%Y-%m-%d}  "
+                f"Jupiter {'yes' if et.jupiter else 'no'}, "
+                f"Saturn {'yes' if et.saturn else 'no'}"
+            )
+        out.append("")
     out.append("=" * 72)
     return "\n".join(out)
 

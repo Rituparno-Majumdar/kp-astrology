@@ -2,7 +2,8 @@
 
 ## Requirements
 
-- **Python 3.9 or newer** (3.9–3.14 are tested in CI).
+- **Python 3.9 or newer** (3.9–3.13 are tested in CI; 3.14 is supported but CI
+  coverage may lag the release cycle).
 - One runtime dependency: [`pyswisseph>=2.10.3`](https://pypi.org/project/pyswisseph/)
   (the official Python binding of the Swiss Ephemeris).
 
@@ -83,7 +84,7 @@ print(paths)                              # [PosixPath(...sepl_18.se1), ...]
 ## Verify the install
 
 ```bash
-kpastro --version              # prints e.g. kpastro 0.1.3
+kpastro --version              # prints e.g. kpastro 0.2.0
 kpastro ayanamsa --date 2026-08-20
 python -c "import kpastro; print(kpastro.__version__)"
 ```

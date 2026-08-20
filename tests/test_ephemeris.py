@@ -117,3 +117,33 @@ class TestSwissEphemeris:
         a_lahiri = a.ayanamsa(jd)
         a_kp = b.ayanamsa(jd)
         assert a_lahiri != pytest.approx(a_kp, abs=1e-6)
+
+    def test_body_matches_sidereal_positions(self):
+        eph = SwissEphemeris()
+        jd = eph.jd_ut(datetime(1990, 1, 15, 9, 0, 0))
+        sider = eph.sidereal_positions(jd)
+        for name in ["Sun", "Moon", "Mercury", "Rahu", "Ketu"]:
+            lon, speed = eph.body(jd, name)
+            assert lon == pytest.approx(sider[name][0], abs=1e-9)
+
+    def test_ayanamsa_modes_differ(self):
+        jd = SwissEphemeris().jd_ut(datetime(2000, 1, 1, 12, 0, 0))
+        values = {}
+        for mode in ("lahiri", "kp", "kp_old"):
+            values[mode] = SwissEphemeris(ayanamsa=mode).ayanamsa(jd)
+        assert values["lahiri"] != pytest.approx(values["kp"], abs=1e-4)
+        assert values["kp"] != pytest.approx(values["kp_old"], abs=1e-4)
+
+    def test_precision_property(self):
+        eph = SwissEphemeris()
+        assert eph.precision in ("full", "moshier")
+
+    def test_context_manager_closes_without_error(self):
+        with SwissEphemeris() as eph:
+            jd = eph.jd_ut(datetime(2000, 1, 1, 12, 0, 0))
+            assert eph.ayanamsa(jd) > 0.0
+
+    def test_jd_ut_accepts_julian_epoch(self):
+        # Pre-1582 dates fall back to the Julian calendar without error.
+        jd = SwissEphemeris().jd_ut(datetime(500, 6, 1, 12, 0, 0))
+        assert jd > 0.0

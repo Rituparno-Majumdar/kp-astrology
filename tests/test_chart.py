@@ -5,6 +5,7 @@ from datetime import date, time
 import pytest
 
 from kpastro.chart import BirthInfo, Chart, compute_chart, render_chart
+from kpastro.ephemeris import SwissEphemeris
 from kpastro.significators import (
     house_of_longitude,
     planet_significations,
@@ -131,3 +132,28 @@ class TestSignifications:
         chart = compute_chart(DELHI)
         assert set(chart.cusp_sublords) == set(range(1, 13))
         assert all(isinstance(lord, str) and lord for lord in chart.cusp_sublords.values())
+
+
+class TestComputeChartValidation:
+    def test_injected_eph_dictates_ayanamsa(self):
+        eph = SwissEphemeris(ayanamsa="kp", node="mean")
+        chart = compute_chart(DELHI, ayanamsa="kp", node="mean", eph=eph)
+        assert chart.ayanamsa_mode == "kp"
+        assert chart.node == "mean"
+
+    def test_injected_eph_mismatch_raises(self):
+        eph = SwissEphemeris(ayanamsa="kp")
+        with pytest.raises(ValueError, match="do not match"):
+            compute_chart(DELHI, ayanamsa="lahiri", eph=eph)
+
+    def test_day_lord_uses_local_weekday(self):
+        # 00:30 local (+5:30) -> 1990-01-14 19:00 UTC; the local day is
+        # Monday so the day-lord must be Moon, not the (different) Sunday UTC.
+        late_night = BirthInfo(date(1990, 1, 15), time(0, 30), 28.6139, 77.2090, 5.5, "Delhi")
+        chart = compute_chart(late_night)
+        from kpastro.constants import WEEKDAY_LORDS
+        assert chart.ruling[0].planet == WEEKDAY_LORDS[late_night.date.weekday()] == "Moon"
+
+    def test_placidus_polar_rejected(self):
+        with pytest.raises(ValueError, match="Placidus"):
+            BirthInfo(date(1990, 1, 15), time(12, 0), 70.0, 25.0)

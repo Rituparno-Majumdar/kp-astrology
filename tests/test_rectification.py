@@ -9,6 +9,7 @@ from kpastro.rectification import (
     CredibleInterval,
     IdentityInfo,
     LifeEvent,
+    SCORING,
     aspects_from_house,
     credible_interval,
     house_significator_sets,
@@ -19,6 +20,8 @@ from kpastro.rectification import (
 )
 from kpastro.significators import house_of_longitude
 from kpastro.vedic import star_lord, sub_lord
+from kpastro.constants import SIGN_LORDS
+from kpastro.vedic import sign_name
 
 DELHI = BirthInfo(date(1990, 1, 15), time(14, 30), 28.6139, 77.2090, 5.5, "Delhi")
 
@@ -288,6 +291,68 @@ class TestCredibleInterval:
             credible_interval([])
 
 
+class TestRectificationRegression:
+    def test_event_predating_birth_is_rejected(self, eph):
+        jd = eph.jd_ut(DELHI.utc_datetime())
+        early = LifeEvent(date(1980, 1, 1), 4, (), "before birth")
+        with pytest.raises(ValueError, match="predates"):
+            score_candidate(jd, DELHI.latitude, DELHI.longitude, [early],
+                            tz_hours=DELHI.tz_hours, eph=eph)
+        with pytest.raises(ValueError, match="predates"):
+            rectify(DELHI, time(14, 30), [early], eph=eph,
+                    analysis_time=datetime(2026, 1, 1, 12, 0))
+
+    def test_snapshot_and_full_path_agree(self, eph):
+        from kpastro.rectification import _scan_snapshot
+        approx = eph.jd_ut(DELHI.utc_datetime())
+        event_jds = tuple(e.jd_ut(DELHI.tz_hours, eph) for e in EVENTS)
+        snap = _scan_snapshot(approx, eph)
+        for jd_off in (-30.0, 0.0, 25.0):
+            jd = approx + jd_off / 1440.0
+            full = score_candidate(jd, DELHI.latitude, DELHI.longitude, EVENTS,
+                                   tz_hours=DELHI.tz_hours, eph=eph,
+                                   approx_jd=approx, event_jds=event_jds)
+            opt = score_candidate(jd, DELHI.latitude, DELHI.longitude, EVENTS,
+                                  tz_hours=DELHI.tz_hours, eph=eph,
+                                  approx_jd=approx, event_jds=event_jds,
+                                  _snapshot=snap)
+            assert (full.total, full.lsl, full.dasha_score) == (opt.total, opt.lsl, opt.dasha_score)
+
+    def test_single_event_scan_runs(self, eph):
+        res = rectify(DELHI, time(14, 33), EVENTS[:1], window_min=10, step_min=2,
+                      eph=eph, analysis_time=datetime(2026, 1, 1, 12, 0))
+        assert len(res.candidates) >= 1
+        assert res.best.total >= res.candidates[0].events[0].lsl_score * 0.5
+
+    def test_secondary_house_lsl_is_scored(self, eph):
+        jd = eph.jd_ut(DELHI.utc_datetime())
+        # LSL-scored secondary hit: force a LifeEvent into a secondary house
+        # and confirm scoring works for the branch (determinism only).
+        ev = LifeEvent(date(2013, 2, 14), 4, (7,), "job+marriage")
+        c = score_candidate(jd + 2 / 1440, DELHI.latitude, DELHI.longitude, [ev],
+                            tz_hours=DELHI.tz_hours, eph=eph)
+        assert 0.0 <= c.events[0].lsl_score <= 3.0
+
+    def test_life_event_validates_houses(self):
+        with pytest.raises(ValueError):
+            LifeEvent(date(2013, 2, 14), 13)
+        with pytest.raises(ValueError):
+            LifeEvent(date(2013, 2, 14), 4, secondary=(0,))
+        with pytest.raises(ValueError):
+            LifeEvent(date(2013, 2, 14), 4, secondary=(99,))
+
+    def test_house_sets_include_cuspal_sign_lord(self, eph):
+        positions, cusps, _ = snapshot(DELHI, eph)
+        sets, _ = house_significator_sets(positions, cusps)
+        for h in range(1, 13):
+            assert SIGN_LORDS[sign_name(cusps[h - 1])] in sets[h]
+
+    def test_scoring_constants_are_named(self):
+        for key in ("lsl_primary", "lsl_secondary", "dasha_share",
+                    "softmax_temperature", "target_mass"):
+            assert float(SCORING[key]) > 0.0
+
+
 class TestRender:
     def test_report_contains_headline_and_best(self, eph):
         res = rectify(DELHI, time(14, 30), EVENTS, window_min=15, step_min=3,
@@ -295,6 +360,6 @@ class TestRender:
         out = render_rectification(res, DELHI)
         assert "RECTIFICATION" in out.replace("\n", "")
         assert "Best candidate" in out
-        assert "Credible range" in out
+        assert "Posterior band" in out
         for ev in EVENTS:
             assert ev.label in out

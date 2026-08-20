@@ -1,7 +1,8 @@
 # Development
 
-Guide for building, testing and releasing **kpastro**. See also
-[CONTRIBUTING.md](../CONTRIBUTING.md) for contributor etiquette.
+Guide for building, testing and releasing **kpastro**. See also the
+[CONTRIBUTING guide](https://github.com/Rituparno-Majumdar/kp-astrology/blob/main/CONTRIBUTING.md)
+for contributor etiquette.
 
 ## Project layout
 
@@ -104,5 +105,5 @@ Notes on releasing:
 ## Continuous integration
 
 `.github/workflows/ci.yml` runs the test suite on Ubuntu and Windows across
-CPython 3.10–3.12 on every push to `main` and on pull requests, including the
+CPython 3.9–3.13 on every push to `main` and on pull requests, including the
 full-precision ephemeris download and a CLI smoke test.

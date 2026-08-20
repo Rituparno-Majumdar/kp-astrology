@@ -37,6 +37,31 @@ class BirthInfo:
     tz_hours: float = 0.0
     place: str = ""
 
+    def __post_init__(self) -> None:
+        try:
+            datetime.combine(self.date, self.time)
+        except (TypeError, ValueError) as exc:
+            raise ValueError(
+                f"invalid date/time combination: {self.date} {self.time}"
+            ) from exc
+        if not -90.0 <= self.latitude <= 90.0:
+            raise ValueError(
+                f"latitude must be within [-90, 90], got {self.latitude}"
+            )
+        if not -180.0 <= self.longitude <= 180.0:
+            raise ValueError(
+                f"longitude must be within [-180, 180], got {self.longitude}"
+            )
+        if not -24.0 <= self.tz_hours <= 24.0:
+            raise ValueError(
+                f"tz_hours must be within [-24, 24], got {self.tz_hours}"
+            )
+        if 66.5 < abs(self.latitude) <= 90.0:
+            raise ValueError(
+                f"latitude {self.latitude} is beyond the Placidus house-cutoff "
+                f"(|lat| <= 66.5 deg); Placidus cusps are undefined there"
+            )
+
     def utc_datetime(self) -> datetime:
         local = datetime.combine(self.date, self.time)
         return local - timedelta(hours=self.tz_hours)
@@ -101,6 +126,12 @@ def compute_chart(
 ) -> Chart:
     """Compute every KP layer for a birth chart."""
     eph = eph or SwissEphemeris(ayanamsa=ayanamsa, node=node)
+    if eph.ayanamsa_mode != ayanamsa or eph.node != node:
+        raise ValueError(
+            f"ayanamsa/node do not match the injected eph instance: "
+            f"eph uses ayanamsa={eph.ayanamsa_mode!r}, node={eph.node!r}; "
+            f"requested ayanamsa={ayanamsa!r}, node={node!r}"
+        )
     dt_utc = birth.utc_datetime()
     jd = eph.jd_ut(dt_utc)
     ayan = eph.ayanamsa(jd)
@@ -172,7 +203,7 @@ def compute_chart(
         cusp_sublords=cusp_sub_lords(cusps),
         ruling=[
             rp
-            for rp in ruling_planets(asc, moon_lon, dt_utc.weekday())
+            for rp in ruling_planets(asc, moon_lon, birth.date.weekday())
         ],
     )
     return chart
@@ -195,7 +226,7 @@ def render_planets(chart: Chart) -> str:
     for p in sorted(chart.planets, key=lambda x: x.longitude):
         abbr = PLANET_ABBR[p.name]
         lines.append(
-            f" {p.name:<9} {_dms(p.sign_degree) + ' ' + p.sign:<10} {p.sign:<12} "
+            f" {p.name:<9} {_dms(p.sign_degree):<10} {p.sign:<12} "
             f"{p.star:<18} {p.sub_lord:<9} {p.sub_sub_lord:<9} {p.house:>5} "
             f"{'R' if p.retrograde else '.':>2}"
         )
@@ -216,11 +247,15 @@ def render_cusps(chart: Chart) -> str:
 
 
 def render_significators(chart: Chart) -> str:
-    lines = [" House  Significators (tier: 1 occupant, 2 occupant-star, 3 cuspal lord, 4 cuspal-star)"]
+    lines = [
+        " House  Significators (tier: 1 occupant, 2 occupant-star, 3 cuspal lord,"
+        " 4 cuspal-star)  [sub-lord = final arbiter]"
+    ]
     lines.append("-" * len(lines[0]))
     for i, tiers in enumerate(chart.house_significators, start=1):
         sig = ", ".join(f"{p}({t})" for p, t in tiers) or "—"
-        lines.append(f"  {i:>4}   {sig}")
+        judge = chart.cusp_sublords.get(i, "?")
+        lines.append(f"  {i:>4}   {sig:<52} arbiter: {judge}")
     return "\n".join(lines)
 
 

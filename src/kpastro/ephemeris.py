@@ -17,6 +17,7 @@ to the sidereal zodiac by subtracting the configured ayanamsa.
 from __future__ import annotations
 
 import os
+import threading
 import urllib.request
 from datetime import datetime
 from pathlib import Path
@@ -40,6 +41,9 @@ NODES: dict[str, int] = {"mean": swe.MEAN_NODE, "true": swe.TRUE_NODE}
 
 #: Sidereal mode last applied to the (process-global) Swiss Ephemeris engine.
 _applied_sid_mode: int | None = None
+
+#: Guards the global ayanamsa mode against interleaving by concurrent users.
+_LOCK = threading.Lock()
 
 #: Swiss Ephemeris body ids keyed by canonical KP planet name.
 SWE_BODY: dict[str, int] = {
@@ -66,24 +70,39 @@ def default_ephe_path() -> Path:
     return Path.home() / ".kpastro" / "ephe"
 
 
+#: Minimum plausible size (bytes) of a compressed ephemeris file.  The three
+#: files are 10-21 MB; anything below this is a truncated download or an HTML
+#: error page, not a valid ephemeris.
+_EPHE_MIN_BYTES = 1_000_000
+
+
 def download_ephemeris(target_dir: Optional[Path | str] = None) -> list[Path]:
     """Download the Swiss Ephemeris data files into ``target_dir``.
 
     Returns the list of paths saved.  Files are fetched from the official
-    ``aloistr/swisseph`` mirror of the astro.com release.
+    ``aloistr/swisseph`` mirror of the astro.com release.  Downloads are
+    written atomically (temp file + rename) and validated by size, so a
+    truncated or corrupt file is never treated as valid on a later run.
     """
     target = Path(target_dir) if target_dir else default_ephe_path()
     target.mkdir(parents=True, exist_ok=True)
     saved: list[Path] = []
     for name in EPHEMERIS_FILES:
         dest = target / name
-        if dest.exists() and dest.stat().st_size > 0:
+        if dest.exists() and dest.stat().st_size >= _EPHE_MIN_BYTES:
             saved.append(dest)
             continue
         url = EPHEMERIS_BASE_URL + name
         with urllib.request.urlopen(url, timeout=60) as resp:
             data = resp.read()
-        dest.write_bytes(data)
+        if len(data) < _EPHE_MIN_BYTES:
+            raise OSError(
+                f"downloaded {name} is only {len(data)} bytes (< {_EPHE_MIN_BYTES}); "
+                f"refusing to keep a truncated or error response"
+            )
+        tmp = dest.with_suffix(dest.suffix + ".part")
+        tmp.write_bytes(data)
+        os.replace(tmp, dest)
         saved.append(dest)
     return saved
 
@@ -120,22 +139,45 @@ class SwissEphemeris:
         # The Swiss Ephemeris holds process-global sidereal state; apply it
         # once and only re-apply when the mode actually changes so tight
         # multi-chart loops make zero redundant C calls. The tracker is
-        # module-global because instances share the engine's global state.
+        # module-global because instances share the engine's global state, and
+        # the lock keeps concurrent callers from interleaving apply/read.
         mode = AYANAMSA_MODES[self.ayanamsa_mode]
-        if mode != _applied_sid_mode:
-            swe.set_sid_mode(mode)
-            _applied_sid_mode = mode
+        with _LOCK:
+            if mode != _applied_sid_mode:
+                swe.set_sid_mode(mode)
+                _applied_sid_mode = mode
 
     @property
     def data_files_present(self) -> bool:
-        return all((self.ephe_path / f).is_file() for f in EPHEMERIS_FILES)
+        return all(
+            (self.ephe_path / f).is_file()
+            and (self.ephe_path / f).stat().st_size >= _EPHE_MIN_BYTES
+            for f in EPHEMERIS_FILES
+        )
+
+    @property
+    def precision(self) -> str:
+        """``"full"`` with JPL/VSOP data files installed, else ``"moshier"``."""
+        return "full" if self.data_files_present else "moshier"
+
+    def _jd_ut_calendar(self, dt: datetime) -> int:
+        # Julian calendar applies before 1582-10-15, Gregorian after.
+        gregorian_start = datetime(1582, 10, 15)
+        return swe.GREG_CAL if dt >= gregorian_start else swe.JUL_CAL
 
     def jd_ut(self, dt: datetime) -> float:
-        """Julian date (UT) for a naive-UTC datetime."""
+        """Julian date (UT) for a naive-UTC datetime.
+
+        The calendar (Julian vs Gregorian) is chosen from the date, and the
+        helper tolerates both 2- and 3-tuple ``utc_to_jd`` returns across
+        pyswisseph versions.
+        """
         secs = dt.second + dt.microsecond / 1_000_000.0
-        _, jd_ut = swe.utc_to_jd(
-            dt.year, dt.month, dt.day, dt.hour, dt.minute, secs, swe.GREG_CAL
+        res = swe.utc_to_jd(
+            dt.year, dt.month, dt.day, dt.hour, dt.minute, secs, self._jd_ut_calendar(dt)
         )
+        # Modern pyswisseph: (retval, jd_ut); older builds append jd_et too.
+        jd_ut = res[-1] if len(res) >= 2 else res[0]
         return jd_ut
 
     def ayanamsa(self, jd_ut: float) -> float:
@@ -147,6 +189,34 @@ class SwissEphemeris:
         flags = swe.FLG_SWIEPH | (swe.FLG_SPEED if with_speed else 0)
         arr, retflag = swe.calc_ut(jd_ut, body, flags)[:2]
         return arr, retflag
+
+    def body(self, jd_ut: float, name: str) -> tuple[float, float]:
+        """Sidereal longitude + daily speed of one canonical body (incl. nodes).
+
+        Avoids recomputing the whole chart when only one body is needed.
+        """
+        ayan = self.ayanamsa(jd_ut)
+        if name in ("Rahu", "Ketu"):
+            lon, speed = self._node_lon(jd_ut)
+            if name == "Ketu":
+                lon = (lon + 180.0) % 360.0
+            return normalize_longitude(lon - ayan), speed
+        arr, _ = self._calc(jd_ut, SWE_BODY[name])
+        return normalize_longitude(arr[0] - ayan), float(arr[3])
+
+    def close(self) -> None:
+        """Release the ephemeris data files held by the global engine.
+
+        Safe to call more than once; the engine, being process-global, is
+        shared by all instances so this only frees the file handles.
+        """
+        swe.close()
+
+    def __enter__(self) -> "SwissEphemeris":
+        return self
+
+    def __exit__(self, *_exc) -> None:
+        self.close()
 
     # -- positions --------------------------------------------------------
 

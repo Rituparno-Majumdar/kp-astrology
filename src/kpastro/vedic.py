@@ -42,6 +42,12 @@ STAR_SPAN_DEG: float = STAR_SPAN_ARCMIN / 60.0
 #: Pada (quarter) span inside a star: 3°20'.
 PADA_SPAN_DEG: float = STAR_SPAN_DEG / 4.0
 
+#: Tolerance (degrees) used when a longitude lands exactly on a sub boundary:
+#: values within 1e-9° below a boundary are assigned to the following sub, so
+#: exact boundaries (e.g. 273.0 = Jupiter/Saturn edge) resolve deterministically.
+#: 1e-9° ~ 3.6e-6 arcseconds, far below any ephemeris precision.
+_BOUNDARY_TOL = 1e-9
+
 
 # ---------------------------------------------------------------------------
 # Small helpers
@@ -49,7 +55,9 @@ PADA_SPAN_DEG: float = STAR_SPAN_DEG / 4.0
 
 def normalize_longitude(lon: float) -> float:
     """Fold a longitude into [0, 360)."""
-    return lon % 360.0
+    lon = lon % 360.0
+    # Gather FP rounding that lands exactly on 360.0 (e.g. -1e-14).
+    return 0.0 if lon == 360.0 else lon
 
 
 def sub_span_arcmin(lord: str) -> float:
@@ -70,6 +78,13 @@ def format_longitude(lon: float, arcsec: bool = True) -> str:
     rem = (lon - deg) * 60.0
     minute = int(rem)
     sec = (rem - minute) * 60.0
+    if sec >= 59.95:  # carry rounding overflow (e.g. ... 59' 60.0")
+        minute += 1
+        sec = 0.0
+        if minute == 60:
+            deg += 1
+            minute = 0
+    deg %= 360
     if arcsec:
         return f"{deg}\u00b0{minute:02d}'{sec:04.1f}\""
     return f"{deg}\u00b0{minute:02d}'"
@@ -97,8 +112,15 @@ def sign_lord_of_longitude(lon: float) -> str:
 # ---------------------------------------------------------------------------
 
 def star_index(lon: float) -> int:
-    """Nakshatra ordinal (0..26) containing the longitude."""
-    return int(normalize_longitude(lon) // STAR_SPAN_DEG)
+    """Nakshatra ordinal (0..26) containing the longitude.
+
+    Boundaries are exact multiples of 800' (13°20'), so the lookup is done in
+    arc-minute integers to avoid degree-multiplication round-off at the edges
+    (e.g. 21*800/60 = 280.0 lands on the wrong side when computed as
+    ``21 * 13.333333333333334``).
+    """
+    idx = int(normalize_longitude(lon) * 60.0 // STAR_SPAN_ARCMIN)
+    return min(idx, 26)
 
 
 def star_name(lon: float) -> str:
@@ -152,6 +174,40 @@ class SubInfo:
 
 
 @lru_cache(maxsize=4096)
+def sub_divisions(star_idx: int) -> tuple[tuple[str, float, float, float], ...]:
+    """The 9 sub-divisions of nakshatra ``star_idx`` (lord, start, end, span').
+
+    Single source of truth for sub tiling: the spans always accumulate to the
+    star's 800' (up to FP slop) and every other consumer shares this exact
+    arithmetic, so no two code paths can drift.  Boundaries are built from the
+    exact arc-minute star start (``star_idx * 800'``) to avoid degree-rounding
+    drift at the star edges.
+    """
+    star_start_arcmin = star_idx * STAR_SPAN_ARCMIN
+    start_pos = star_idx % 9
+    # Cumulative years must stay integral so the boundary arcminute values are
+    # exact rationals (20/3 x years), which keeps two adjacent subs sharing an
+    # identical edge instead of drifting by an ulp.
+    cum_years = 0.0
+    out: list[tuple[str, float, float, float]] = []
+    for k in range(9):
+        lord = VIMSHOTTARI_ORDER[(start_pos + k) % 9]
+        cum_years += VIMSHOTTARI_YEARS[lord]
+        span = sub_span_arcmin(lord)
+        start_deg = (
+            star_start_arcmin + (cum_years - VIMSHOTTARI_YEARS[lord])
+            * STAR_SPAN_ARCMIN / VIMSHOTTARI_TOTAL_YEARS
+        ) / 60.0
+        end_deg = (
+            star_start_arcmin + cum_years * STAR_SPAN_ARCMIN / VIMSHOTTARI_TOTAL_YEARS
+        ) / 60.0
+        out.append(
+            (lord, start_deg, end_deg, span)
+        )
+    return tuple(out)
+
+
+@lru_cache(maxsize=4096)
 def sub_info(lon: float) -> SubInfo:
     """Locate the Vimshottari sub-lord of the given sidereal longitude.
 
@@ -161,22 +217,19 @@ def sub_info(lon: float) -> SubInfo:
     """
     lon = normalize_longitude(lon)
     idx = star_index(lon)
-    star_start = idx * STAR_SPAN_DEG
-    offset_arcmin = (lon - star_start) * 60.0
-    start_pos = idx % 9
-    running = 0.0
-    for k in range(9):
-        lord = VIMSHOTTARI_ORDER[(start_pos + k) % 9]
-        span = sub_span_arcmin(lord)
-        if offset_arcmin < running + span:
+    # Forward-push exact-boundary longitudes to the next sub, but never past
+    # the star's own end (which would overflow the last sub).
+    star_end = (idx + 1) * STAR_SPAN_ARCMIN / 60.0
+    probe = min(lon + _BOUNDARY_TOL, star_end - 1e-12)
+    for k, (lord, start_deg, end_deg, _span) in enumerate(sub_divisions(idx)):
+        if start_deg <= probe < end_deg:
             return SubInfo(
                 lord=lord,
                 index=k,
-                start_deg=star_start + running / 60.0,
-                end_deg=star_start + (running + span) / 60.0,
-                span_arcmin=span,
+                start_deg=start_deg,
+                end_deg=end_deg,
+                span_arcmin=sub_span_arcmin(lord),
             )
-        running += span
     raise ValueError(f"could not resolve sub-lord for longitude {lon}")
 
 
@@ -200,21 +253,31 @@ class SubSubInfo:
 
 @lru_cache(maxsize=4096)
 def sub_sub_info(lon: float) -> SubSubInfo:
-    """Locate the sub-sub-lord of the given sidereal longitude (cached)."""
+    """Locate the sub-sub-lord of the given sidereal longitude (cached).
+
+    A sub is divided into 9 sub-subs proportionally to the Vimshottari years,
+    measured against the **sub's own width** (not the star's 800' span): the
+    sub-sub sequence starts at the sub-lord and each sub-sub spans
+
+    .. math::
+
+        \\text{sub-sub span} = \\text{sub span} \\times \\frac{\\text{lord's years}}{120}
+
+    """
     lon = normalize_longitude(lon)
     sub = sub_info(lon)
-    offset_arcmin = (lon - sub.start_deg) * 60.0
-    start_pos = VIMSHOTTARI_INDEX[sub.lord]
+    probe = min(lon + _BOUNDARY_TOL, sub.end_deg - 1e-12)
     running = 0.0
-    for k in range(9):
-        lord = VIMSHOTTARI_ORDER[(start_pos + k) % 9]
-        span = sub_span_arcmin(lord)
-        if offset_arcmin < running + span:
+    for k, (lord, _start_deg, _end_deg, _span) in enumerate(sub_divisions(sub.index)):
+        span = sub.span_arcmin * VIMSHOTTARI_YEARS[lord] / VIMSHOTTARI_TOTAL_YEARS
+        start_deg = sub.start_deg + running / 60.0
+        end_deg = start_deg + span / 60.0
+        if start_deg <= probe < end_deg:
             return SubSubInfo(
                 lord=lord,
                 index=k,
-                start_deg=sub.start_deg + running / 60.0,
-                end_deg=sub.start_deg + (running + span) / 60.0,
+                start_deg=start_deg,
+                end_deg=end_deg,
                 span_arcmin=span,
             )
         running += span

@@ -4,6 +4,57 @@ All notable changes to **kpastro** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Fixed
+
+- **Sub-sub-lord division bug** — the sub-sub was scaled against the star's
+  800' span instead of the sub's own width, so `sub_sub_lord == sub_lord` for
+  every interior longitude and the pratyantar-dasha level duplicated the
+  antardasha. Now correctly scaled (regression tests included).
+- **Dasha balance for un-normalised Moons** — `dasha_balance` folded a raw
+  longitude such as `-0.1` into a 459-year Mercury mahadasha; the Moon is now
+  normalised at entry.
+- **Exact-boundary stability** — star/sub boundaries are built from exact
+  arc-minute cumulative sums, so a longitude exactly on an edge (e.g. 280.0°)
+  resolves deterministically to the following star/sub instead of drifting by
+  an ulp. Sub-lord/sub-sub lookup also gets a boundary tolerance and can no
+  longer raise inside the last arc of a nakshatra, and `format_longitude` no
+  longer prints `59'60"`.
+- **Chart day-lord** — computed from the local civil weekday (`birth.date`),
+  not the UTC weekday, so charts near midnight no longer report the wrong
+  ruling day-lord.
+- **Significators** — house significator sets now include sign-lordship
+  (ownership); the cuspal sub-lord ("final arbiter") is surfaced in rendering.
+- **Rectification honesty** — the "credible interval" is renamed in prose to
+  a **posterior band**: it is now the shortest contiguous span holding the
+  target mass (a descriptive softmax band, documented as *not* a statistical
+  credible interval), its peak is chosen with the same tie-break as `best`,
+  and the temperature/target mass are emitted.
+- **Rectification validation** — events dated before birth are rejected with a
+  clear `ValueError` instead of being silently half-scored; `LifeEvent`
+  validates houses (1-12) at construction; one shared validator is used by
+  `rectify`/`score_candidate`/`transit_confirmation`.
+- **Robustness** — `BirthInfo` validates date, lat/lon and tz and rejects
+  polar latitudes (Placidus undefined); `download_ephemeris` writes atomically
+  and refuses truncated/error responses; the global sidereal mode is guarded
+  by a lock; pre-1582 dates use the Julian calendar; `jd_ut` tolerates both
+  `pyswisseph` return arities.
+
+### Changed
+
+- CLI: malformed dates, out-of-range horary numbers and coordinates now exit
+  with usage (code 2) instead of a raw traceback; `kp_number_for_longitude`
+  always returns a division (longitudes are normalised).
+- Performance: rectification hoists the slow planets/star lords out of the
+  per-minute loop (only Moon + houses are recomputed per candidate); a shared
+  `SCORING` block names every heuristic weight.
+- Tests: CLI suite added (previously 0% covered), coverage floor of 85%
+  enforced via `pytest-cov`, plus golden sub-sub, boundary, ayanamsa-mode,
+  snapshot-equivalence and single-event regression tests.
+- CI matrix widened to CPython 3.9-3.13; `mkdocs build --strict` passes; docs
+  version/matrix claims corrected.
+
 ## [0.2.0] - 2026-08-20
 
 - **New: birth-time rectification** (`kpastro.rectification`) — the classic KP

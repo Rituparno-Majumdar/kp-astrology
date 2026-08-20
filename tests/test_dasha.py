@@ -31,7 +31,11 @@ class TestDashaBalance:
         assert b.mahadasha_years == pytest.approx(1.75, rel=1e-9)
         assert b.mahadasha_days == pytest.approx(1.75 * 365.25, rel=1e-9)
         assert b.active_ad_lord == "Saturn"
-        assert b.active_pd_lord == "Saturn"
+        # regression: the sub-sub levels must be distinct from the sub level
+        # (Saturn sub's own sub-sub at Moon 10.0 is Ketu, not Saturn).
+        assert b.active_pd_lord == "Ketu"
+        assert b.active_pd_lord != b.active_ad_lord
+        assert b.active_pd_days != pytest.approx(b.active_ad_days, abs=1e-9)
         assert b.nakshatra == "Ashwini"
         assert b.nakshatra_index == 0
 
@@ -124,7 +128,7 @@ class TestPratyantardashas:
         md = mahadasha_timeline(10.0)
         ads = antardashas_of(md[0], bal)
         pds = pratyantardashas_of(ads[0], bal, md_is_partial=True)
-        assert pds[0].lord == bal.active_pd_lord == "Saturn"
+        assert pds[0].lord == bal.active_pd_lord == "Ketu"
         assert pds[0].duration_days == pytest.approx(bal.active_pd_days, abs=1e-6)
         assert pds[-1].end_days == pytest.approx(ads[0].end_days, abs=1e-6)
 

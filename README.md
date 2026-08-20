@@ -25,7 +25,7 @@ Krishnamurti Paddhati (KP) is a stellar system of Vedic astrology developed by P
 - **Significators** — Grah and Bhaav Nirdeshan: house and planet significators with 4-tier ranking.
 - **Ruling planets** — day-lord, ascendant-lord and Moon-lord for the moment.
 - **KP horary** — the 1-249 division number system with the horary ascendant taken as the division midpoint.
-- **Birth-time rectification** — recover an unknown/approximate birth time from dated life events judged to fall in specific KP houses; each candidate minute is scored by lagna sub-lord + dasha + ruling-planet + sibling tests, with a credible-interval range and a Jupiter/Saturn transit cross-check.
+- **Birth-time rectification** — recover an unknown/approximate birth time from dated life events judged to fall in specific KP houses; each candidate minute is scored by lagna sub-lord + dasha + optional ruling-planet and a weak sibling hint, with a posterior-band range (75% mass, NOT a statistical credible interval) and a Jupiter/Saturn transit cross-check.
 - **CLI + Python API** — everything available as a typed library *and* as a `kpastro` command-line tool.
 
 ## Install
@@ -105,8 +105,10 @@ result = rectify(birth, time(14, 30), events)   # scans +/-60 min at 1-min steps
 print(render_rectification(result, birth))
 ```
 
-`result.best` is the top-scoring birth time, `result.credible` the 75%-mass
-time range, and `result.candidates` the full ranked scan.
+`result.best` is the top-scoring birth time, `result.credible` a shortest
+contiguous posterior band holding 75% of the softmax mass over the scanned
+grid (a descriptive band, not a statistical credible interval), and
+`result.candidates` the full ranked scan.
 
 ## The mathematics
 
@@ -116,7 +118,7 @@ time range, and `result.candidates` the full ranked scan.
 sidereal longitude = tropical longitude - ayanamsa
 ```
 
-The Chitrapaksha (Lahiri) zero point anchors the sidereal origin to the star Spica (Chitra) at 0° Libra. Lahiri and KP modes differ only in the exact reference and precession model used; around **2026 the ayanamsa is approximately 24.14°**.
+The Chitrapaksha (Lahiri) zero point anchors the sidereal origin to the star Spica (Chitra) at 0° Libra. Lahiri and KP modes differ only in the exact reference and precession model used; around **2026 the Lahiri ayanamsa is approximately 24.22°** (the KP/VP291 value is ~24.14°).
 
 **Nakshatra** — the zodiac is divided into 27 nakshatras of **13°20' = 800'** each.
 

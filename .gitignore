@@ -10,6 +10,9 @@ build/
 *.egg
 .eggs/
 
+# Docs site output
+site/
+
 # Test / coverage
 .pytest_cache/
 .coverage

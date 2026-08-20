@@ -20,13 +20,32 @@ from . import __version__
 from .chart import BirthInfo, compute_chart, render_chart
 from .dasha import mahadasha_timeline
 from .ephemeris import SwissEphemeris, download_ephemeris
-from .horary import ascendant_from_kp_number
+from .horary import MAX_HORARY_NUMBER, ascendant_from_kp_number
 from .significators import ruling_planets
 from .vedic import format_longitude
 
 
-def _parse_date(arg: str) -> DateType:
-    return DateType.fromisoformat(arg)
+def _date_arg(arg: str) -> DateType:
+    try:
+        return DateType.fromisoformat(arg)
+    except ValueError:
+        raise argparse.ArgumentTypeError(
+            f"invalid date {arg!r}; use YYYY-MM-DD"
+        ) from None
+
+
+def _horary_number_arg(arg: str) -> int:
+    try:
+        value = int(arg)
+    except ValueError:
+        raise argparse.ArgumentTypeError(
+            f"invalid KP horary number {arg!r}; must be an integer"
+        ) from None
+    if not 1 <= value <= MAX_HORARY_NUMBER:
+        raise argparse.ArgumentTypeError(
+            f"KP horary number must be 1-{MAX_HORARY_NUMBER}, got {value}"
+        )
+    return value
 
 
 def _parse_time(arg: str) -> TimeType:
@@ -42,7 +61,7 @@ def _parse_time(arg: str) -> TimeType:
 
 def cmd_natal(args: argparse.Namespace) -> int:
     birth = BirthInfo(
-        date=_parse_date(args.date),
+        date=args.date,
         time=args.time,
         latitude=args.lat,
         longitude=args.lon,
@@ -57,7 +76,7 @@ def cmd_natal(args: argparse.Namespace) -> int:
 def cmd_horary(args: argparse.Namespace) -> int:
     q = ascendant_from_kp_number(args.number)
     birth = BirthInfo(
-        date=_parse_date(args.date),
+        date=args.date,
         time=args.time,
         latitude=args.lat,
         longitude=args.lon,
@@ -83,7 +102,7 @@ def cmd_horary(args: argparse.Namespace) -> int:
 
 def cmd_dasha(args: argparse.Namespace) -> int:
     birth = BirthInfo(
-        date=_parse_date(args.date),
+        date=args.date,
         time=args.time,
         latitude=args.lat,
         longitude=args.lon,
@@ -118,7 +137,7 @@ def format_dash_days(balance) -> str:
 def cmd_rulings(args: argparse.Namespace) -> int:
     chart = compute_chart(
         BirthInfo(
-            date=_parse_date(args.date),
+            date=args.date,
             time=args.time,
             latitude=args.lat,
             longitude=args.lon,
@@ -137,7 +156,7 @@ def cmd_rulings(args: argparse.Namespace) -> int:
 def cmd_ayanamsa(args: argparse.Namespace) -> int:
     from datetime import datetime as _dt
     eph = SwissEphemeris(ayanamsa=args.ayanamsa)
-    when = _dt.combine(DateType.fromisoformat(args.date), TimeType(12, 0))
+    when = _dt.combine(args.date, TimeType(12, 0))
     jd = eph.jd_ut(when)
     ayan = eph.ayanamsa(jd)
     print(f" {args.ayanamsa:<7} ayanamsa on {args.date} (12:00 UT) = {format_longitude(ayan)}")
@@ -161,7 +180,7 @@ def build_parser() -> argparse.ArgumentParser:
     sub = p.add_subparsers(dest="command", required=True)
 
     def add_common(sp: argparse.ArgumentParser, with_number: bool = False) -> None:
-        sp.add_argument("--date", default=DateType.today().isoformat(), help="YYYY-MM-DD (default today)")
+        sp.add_argument("--date", default=DateType.today().isoformat(), type=_date_arg, help="YYYY-MM-DD (default today)")
         sp.add_argument("--time", default="12:00", type=_parse_time, help="HH:MM or HH:MM:SS local (default 12:00)")
         sp.add_argument("--tz", type=float, default=5.5, help="UTC offset in hours (default +5.5)")
         sp.add_argument("--lat", type=float, required=True, help="geographic latitude (deg)")
@@ -170,7 +189,7 @@ def build_parser() -> argparse.ArgumentParser:
         sp.add_argument("--ayanamsa", choices=("lahiri", "kp", "kp_old"), default="lahiri")
         sp.add_argument("--node", choices=("mean", "true"), default="mean")
         if with_number:
-            sp.add_argument("--number", type=int, required=True, help="KP horary number 1-249")
+            sp.add_argument("--number", type=_horary_number_arg, required=True, help=f"KP horary number 1-{MAX_HORARY_NUMBER}")
 
     sp = sub.add_parser("natal", help="complete KP birth chart")
     add_common(sp)
@@ -189,7 +208,7 @@ def build_parser() -> argparse.ArgumentParser:
     sp.set_defaults(func=cmd_rulings)
 
     sp = sub.add_parser("ayanamsa", help="ayanamsa value on a date")
-    sp.add_argument("--date", default=DateType.today().isoformat(), help="YYYY-MM-DD (default today)")
+    sp.add_argument("--date", default=DateType.today().isoformat(), type=_date_arg, help="YYYY-MM-DD (default today)")
     sp.add_argument("--ayanamsa", choices=("lahiri", "kp", "kp_old"), default="lahiri")
     sp.set_defaults(func=cmd_ayanamsa)
 
@@ -202,7 +221,13 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
-    return args.func(args)
+    try:
+        return args.func(args)
+    except ValueError as exc:
+        # Runtime validation errors (bad coordinates/timezone/ayanamsa) become
+        # a clean usage message + exit code 2 instead of a traceback.
+        parser.error(str(exc))
+    return 0
 
 
 if __name__ == "__main__":

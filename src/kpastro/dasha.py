@@ -36,15 +36,20 @@ from .constants import (
     VIMSHOTTARI_TOTAL_YEARS,
     VIMSHOTTARI_YEARS,
 )
-from .vedic import STAR_SPAN_DEG, sub_info, sub_sub_info, star_index, star_lord
+from .vedic import (
+    STAR_SPAN_DEG,
+    normalize_longitude,
+    sub_info,
+    sub_sub_info,
+    star_index,
+    star_lord,
+)
 
 #: Days in one dasha year (the convention used by KP software).
 DAYS_PER_YEAR: float = 365.25
 
 #: Days of one full Vimshottari cycle.
 CYCLE_DAYS: float = VIMSHOTTARI_TOTAL_YEARS * DAYS_PER_YEAR
-
-_NINTH = 9
 
 
 # ---------------------------------------------------------------------------
@@ -109,6 +114,7 @@ def mahadasha_days(lord: str) -> float:
 @lru_cache(maxsize=4096)
 def dasha_balance(moon_longitude: float) -> Balance:
     """All nested balances from the sidereal birth Moon longitude (cached)."""
+    moon_longitude = normalize_longitude(moon_longitude)
     idx = star_index(moon_longitude)
     star_start = idx * STAR_SPAN_DEG
     star = STAR_SPAN_DEG
@@ -154,7 +160,7 @@ def _subperiods(
     pos = VIMSHOTTARI_INDEX[start_anchor or parent_lord]
     out: list[Period] = []
     offset = 0.0
-    for k in range(_NINTH):
+    for k in range(len(VIMSHOTTARI_ORDER)):
         lord = VIMSHOTTARI_ORDER[(pos + k) % 9]
         if k == 0 and first_dur is not None:
             dur = first_dur
@@ -175,12 +181,11 @@ def mahadasha_timeline(moon_longitude: float, epochs: int = 1) -> list[Period]:
     offset = 0.0
     pos = bal.nakshatra_index % 9
     for _ in range(epochs):
-        for k in range(_NINTH):
+        for k in range(len(VIMSHOTTARI_ORDER)):
             lord = VIMSHOTTARI_ORDER[(pos + k) % 9]
             dur = bal.mahadasha_days if (k == 0 and _ == 0 and lord == bal.mahadasha_lord) else mahadasha_days(lord)
             periods.append(Period(lord, offset, offset + dur, 1))
             offset += dur
-        pos = (pos + _NINTH) % 9
     return periods
 
 

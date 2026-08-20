@@ -38,6 +38,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "pytest>=7.0",
+    "pytest-cov>=4.0",
 ]
 docs = [
     "mkdocs>=1.6",
@@ -59,4 +60,4 @@ where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-q"
+addopts = "-q --cov=kpastro --cov-report=term-missing:skip-covered --cov-fail-under=85"

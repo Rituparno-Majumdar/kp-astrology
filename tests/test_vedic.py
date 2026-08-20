@@ -24,6 +24,7 @@ from kpastro.vedic import (
     sub_span_arcmin,
     sub_sub_info,
     sub_sub_lord,
+    sub_divisions,
 )
 
 VIMSHOTTARI_ORDER = ("Ketu", "Venus", "Sun", "Moon", "Mars", "Rahu", "Jupiter", "Saturn", "Mercury")
@@ -109,7 +110,10 @@ class TestSubInfo:
 
     def test_sub_lord_shortcut(self):
         assert sub_lord(0.0) == "Ketu"
-        assert sub_lord(200.0) == "Mars"
+        # 200.0 is the Swati/Vishakha star boundary -> belongs to Vishakha
+        # whose first sub is Jupiter; 200.5 is interior to the same sub.
+        assert sub_lord(200.0) == "Jupiter"
+        assert sub_lord(200.5) == "Jupiter"
 
 
 class TestSubSubInfo:
@@ -118,15 +122,31 @@ class TestSubSubInfo:
             s = sub_info(lon)
             ss = sub_sub_info(lon)
             assert isinstance(ss, SubSubInfo)
-            assert s.start_deg <= ss.start_deg + 1e-9
+            assert s.start_deg - 1e-9 <= ss.start_deg
             assert ss.end_deg <= s.end_deg + 1e-9
             assert ss.start_deg <= lon < ss.end_deg
 
     def test_zero_longitude(self):
+        # Ketu sub spans 46.667'; at the sub's own start the first sub-sub is
+        # Ketu again, but only 46.667 * 7 / 120 = 2.722' wide (the sub-sub is
+        # scaled to the SUB's width, not the star's 800').
         ss = sub_sub_info(0.0)
         assert ss.lord == "Ketu"
-        assert ss.span_arcmin == pytest.approx(46.6667, rel=1e-6)
+        assert ss.span_arcmin == pytest.approx(46.666666666666664 * 7 / 120, rel=1e-9)
         assert sub_sub_lord(0.0) == "Ketu"
+
+    def test_subsub_lord_golden_values(self):
+        # Golden values inside the Sun sub of Ashwini (3°00' - 3°40'):
+        # sub-subs open at the sub-lord (Sun 2'), then Moon 2'-5'20", ...
+        assert sub_sub_lord(3.05) == "Moon"   # offset 3'  -> Moon
+        assert sub_sub_lord(3.1) == "Mars"    # offset 6'  -> Mars
+        assert sub_sub_lord(3.6) == "Venus"   # offset 36' -> Venus (last)
+        # Inside the Moon sub (3°40' - 4°46'40"): Moon, Mars, Rahu, Jupiter ...
+        assert sub_sub_lord(4.0) == "Jupiter"
+        # The sub-sub must genuinely differ from the sub for interior points
+        # (this is THE regression test for the sub-sub == sub-sub bug).
+        assert sub_sub_lord(4.0) != sub_lord(4.0)
+        assert sub_sub_lord(10.0) != sub_lord(10.0)   # Ketu vs Saturn
 
 
 class TestSignHelpers:
@@ -184,14 +204,69 @@ class TestPointInfo:
         assert p.longitude == 200.0
         assert p.sign == "Libra"
         assert p.sign_lord == "Venus"
-        assert p.star == "Swati"
-        assert p.star_lord == "Rahu"
-        assert p.star_index == 14
+        assert p.star == "Vishakha"   # 200.0 is the Swati/Vishakha boundary
+        assert p.star_lord == "Jupiter"
+        assert p.star_index == 15
         assert p.sub_lord == sub_lord(200.0)
         assert p.sub_sub_lord == sub_sub_lord(200.0)
         assert 1 <= p.pada <= 4
+
+    def test_point_info_interior_same_star(self):
+        p = point_info(199.5)
+        assert p.star == "Swati"
+        assert p.star_lord == "Rahu"
 
     def test_point_info_normalizes(self):
         p = point_info(560.0)  # 560 - 360 = 200
         assert p.longitude == 200.0
         assert p.sign == "Libra"
+
+
+class TestSubDivisions:
+    def test_nine_subs_per_star_contiguous(self):
+        for sidx in range(27):
+            subs = sub_divisions(sidx)
+            assert len(subs) == 9
+            for k in range(9):
+                lord, start, end, span = subs[k]
+                assert start < end
+                if k > 0:
+                    assert subs[k - 1][2] == pytest.approx(start, abs=1e-9)
+                    assert subs[k - 1][3] == pytest.approx(sub_span_arcmin(subs[k - 1][0]), rel=1e-12)
+
+    def test_star_starts_clean_and_end_at_360(self):
+        assert sub_divisions(0)[0][1] == 0.0
+        assert sub_divisions(26)[-1][2] == pytest.approx(360.0, abs=1e-12)
+
+    def test_sub_info_and_divisions_share_edges(self):
+        # sub_info must never disagree with sub_divisions on an interior point.
+        for sidx in range(27):
+            for lord, start, end, _span in sub_divisions(sidx):
+                mid = (start + end) / 2.0
+                s = sub_info(mid)
+                assert s.lord == lord
+                assert s.start_deg == pytest.approx(start, abs=1e-9)
+
+    def test_exact_star_boundaries_belong_to_next_star(self):
+        for i in range(1, 27):
+            boundary = i * STAR_SPAN_DEG
+            assert star_index(boundary) == i
+            assert sub_info(boundary).index == 0  # first sub of the next star
+
+
+class TestBoundaryRobustness:
+    def test_format_longitude_carries_without_60s(self):
+        assert format_longitude(33.333333333333332) == "33\u00b020'00.0\""
+        assert format_longitude(359.9999999) == "0\u00b000'00.0\""
+
+    def test_normalize_folds_360_and_negative_junk(self):
+        assert normalize_longitude(360.0) == 0.0
+        assert normalize_longitude(-1e-14) == 0.0
+        assert normalize_longitude(-0.1) == pytest.approx(359.9, rel=1e-12)
+
+    def test_no_crash_inside_nakshatra_tail(self):
+        # The last wave before each star end must still resolve (FP-safe).
+        for i in range(27):
+            end = i * STAR_SPAN_DEG + STAR_SPAN_DEG - 1e-10
+            s = sub_info(end)
+            assert s.start_deg <= end < s.end_deg

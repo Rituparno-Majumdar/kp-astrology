@@ -17,22 +17,21 @@ from dataclasses import dataclass
 from bisect import bisect_right
 from functools import lru_cache
 
-from .constants import VIMSHOTTARI_ORDER, VIMSHOTTARI_YEARS
+from .constants import VIMSHOTTARI_ORDER
 from .vedic import (
-    STAR_SPAN_DEG,
+    normalize_longitude,
     point_info,
-    sign_index,
     sign_lord_of_longitude,
     sign_name,
-    star_index,
-    star_name,
     star_lord,
-    sub_info,
-    sub_lord,
-    sub_sub_lord,
+    star_name,
+    sub_divisions,
 )
 
 MAX_HORARY_NUMBER = 249
+
+#: Tolerance for deciding a sign boundary falls strictly inside a sub.
+_BOUNDARY_EPS = 1e-9
 
 
 @dataclass(frozen=True)
@@ -65,20 +64,16 @@ def kp_divisions() -> list[HoraryDiv]:
 def _divisions_tuple() -> tuple[HoraryDiv, ...]:
     subs: list[tuple[float, float, int, str]] = []
     for sidx in range(27):
-        star_start = sidx * STAR_SPAN_DEG
-        pos = sidx % 9
-        run = 0.0
-        for k in range(9):
-            lord = VIMSHOTTARI_ORDER[(pos + k) % 9]
-            span = VIMSHOTTARI_YEARS[lord] * (800.0 / 60.0) / 120.0
-            subs.append((star_start + run, star_start + run + span, sidx, lord))
-            run += span
+        for lord, start, end, _span in sub_divisions(sidx):
+            subs.append((start, end, sidx, lord))
 
     divisions: list[HoraryDiv] = []
     num = 0
     for start, end, sidx, sub_owner in subs:
-        boundaries = [b for b in (30.0 * k for k in range(1, 12))
-                      if start + 1e-9 < b < end - 1e-9]
+        boundaries = [
+            b for b in (30.0 * k for k in range(1, 12))
+            if start + _BOUNDARY_EPS < b < end - _BOUNDARY_EPS
+        ]
         cursor = start
         for b in boundaries + [end]:
             seg_start, seg_end = cursor, b
@@ -129,15 +124,15 @@ def ascendant_from_kp_number(n: int) -> dict:
     }
 
 
-def kp_number_for_longitude(lon: float) -> int | None:
+def kp_number_for_longitude(lon: float) -> int:
     """Inverse lookup: which KP horary division contains this sidereal longitude.
 
     Uses binary search over the cached division-start table, so a single
-    lookup is O(log 249) instead of rescanning the whole zodiac.
+    lookup is O(log 249) instead of rescanning the whole zodiac.  Longitudes
+    outside [0, 360) are normalised first (the 249 divisions tile the full
+    zodiac, so the lookup always succeeds).
     """
-    lon = lon % 360.0
+    lon = normalize_longitude(lon)
     starts = _division_starts()
     idx = bisect_right(starts, lon) - 1
-    if 0 <= idx < len(starts):
-        return idx + 1
-    return None
+    return max(idx, 0) + 1
