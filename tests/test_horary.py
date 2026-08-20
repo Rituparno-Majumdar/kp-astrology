@@ -57,6 +57,12 @@ class TestKPDivisions:
         for i in range(len(ds) - 1):
             assert ds[i].end_deg == pytest.approx(ds[i + 1].start_deg, abs=1e-9)
 
+    def test_divisions_returns_independent_lists(self):
+        # the internal table is cached but each call must return a fresh list
+        first = kp_divisions()
+        first.clear()
+        assert len(kp_divisions()) == MAX_HORARY_NUMBER == 249
+
 
 class TestAscendant:
     def test_number_1_midpoint(self):
@@ -83,6 +89,10 @@ class TestAscendant:
         for n in (1, 45, 249):
             a = ascendant_from_kp_number(n)
             assert kp_number_for_longitude(a["ascendant"]) == n
+
+    def test_all_249_division_midpoints_round_trip(self):
+        for div in kp_divisions():
+            assert kp_number_for_longitude(div.mid_deg) == div.number
 
     def test_kp_number_for_exact_boundaries(self):
         # lon exactly on a sign boundary inside a sub still maps into a division

@@ -4,6 +4,16 @@ All notable changes to **kpastro** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.1.4] - 2026-08-20
+
+- Performance: memoize the KP horary division table; `kp_number_for_longitude` now
+  uses binary search (measured ~3600x faster), `ascendant_from_kp_number` ~195x faster,
+  full `compute_chart` ~830 -> ~1070 charts/s.
+- Cache deterministic subdivision/dasha math (`sub_info`, `sub_sub_info`, `dasha_balance`).
+- Re-apply the Swiss Ephemeris sidereal mode only when it changes.
+- Host documentation on GitHub Pages: `.github/workflows/docs.yml` deploys the MkDocs
+  site on every `main` push / release tag; page: https://rituparno-majumdar.github.io/kp-astrology/.
+
 ## [0.1.3] - 2026-08-20
 
 - Add in-depth documentation: `docs/` user guide, API reference, worked examples,

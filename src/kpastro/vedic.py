@@ -23,6 +23,7 @@ Conventions
 from __future__ import annotations
 
 from dataclasses import dataclass
+from functools import lru_cache
 
 from .constants import (
     NAKSHATRAS,
@@ -150,8 +151,14 @@ class SubInfo:
     span_arcmin: float
 
 
+@lru_cache(maxsize=4096)
 def sub_info(lon: float) -> SubInfo:
-    """Locate the Vimshottari sub-lord of the given sidereal longitude."""
+    """Locate the Vimshottari sub-lord of the given sidereal longitude.
+
+    Deterministic and immutable, so results are cached; repeated lookups for
+    the same longitude (e.g. one used as both a planet position and a cusp)
+    resolve instantly.
+    """
     lon = normalize_longitude(lon)
     idx = star_index(lon)
     star_start = idx * STAR_SPAN_DEG
@@ -191,8 +198,9 @@ class SubSubInfo:
     span_arcmin: float
 
 
+@lru_cache(maxsize=4096)
 def sub_sub_info(lon: float) -> SubSubInfo:
-    """Locate the sub-sub-lord of the given sidereal longitude."""
+    """Locate the sub-sub-lord of the given sidereal longitude (cached)."""
     lon = normalize_longitude(lon)
     sub = sub_info(lon)
     offset_arcmin = (lon - sub.start_deg) * 60.0

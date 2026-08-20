@@ -109,12 +109,19 @@ class SwissEphemeris:
             swe.set_ephe_path(str(self.ephe_path))
 
         # Import-time probing never mutates the engine's sidereal mode.
+        self._last_sid_mode: int | None = None
         self._set_sid_mode()
 
     # -- engine plumbing --------------------------------------------------
 
     def _set_sid_mode(self) -> None:
-        swe.set_sid_mode(AYANAMSA_MODES[self.ayanamsa_mode])
+        # The Swiss Ephemeris holds process-global sidereal state; apply it
+        # once and only re-apply when the mode actually changes so tight
+        # multi-chart loops make zero redundant C calls.
+        mode = AYANAMSA_MODES[self.ayanamsa_mode]
+        if mode != self._last_sid_mode:
+            swe.set_sid_mode(mode)
+            self._last_sid_mode = mode
 
     @property
     def data_files_present(self) -> bool:

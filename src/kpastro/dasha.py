@@ -27,6 +27,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime, timedelta
+from functools import lru_cache
 
 from .constants import (
     NAKSHATRAS,
@@ -105,8 +106,9 @@ def mahadasha_days(lord: str) -> float:
 # Balance at birth
 # ---------------------------------------------------------------------------
 
+@lru_cache(maxsize=4096)
 def dasha_balance(moon_longitude: float) -> Balance:
-    """All nested balances from the sidereal birth Moon longitude."""
+    """All nested balances from the sidereal birth Moon longitude (cached)."""
     idx = star_index(moon_longitude)
     star_start = idx * STAR_SPAN_DEG
     star = STAR_SPAN_DEG

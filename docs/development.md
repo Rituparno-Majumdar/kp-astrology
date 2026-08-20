@@ -46,9 +46,14 @@ construction and CLI output. Keep new tests focused on one unit of behaviour.
 ## Building the documentation site
 
 ```bash
+pip install -e ".[docs]"
 mkdocs build            # static site in site/
 mkdocs serve            # live preview at http://127.0.0.1:8000
+mkdocs gh-deploy        # publish to https://rituparno-majumdar.github.io/kp-astrology/
 ```
+
+The docs are deployed **automatically** by `.github/workflows/docs.yml` on every
+push to `main` and on every `v*` release tag.
 
 ## Building and checking the distribution
 

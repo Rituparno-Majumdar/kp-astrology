@@ -14,6 +14,8 @@ chart counts exactly **249** numbered divisions from 0° Aries.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from bisect import bisect_right
+from functools import lru_cache
 
 from .constants import VIMSHOTTARI_ORDER, VIMSHOTTARI_YEARS
 from .vedic import (
@@ -51,7 +53,16 @@ class HoraryDiv:
 
 
 def kp_divisions() -> list[HoraryDiv]:
-    """Generate all 249 divisions in ascending zodiacal order."""
+    """Generate all 249 divisions in ascending zodiacal order.
+
+    The table is computed once and cached; each call returns a fresh list
+    over the immutable internal table, so callers may not corrupt the cache.
+    """
+    return list(_divisions_tuple())
+
+
+@lru_cache(maxsize=None)
+def _divisions_tuple() -> tuple[HoraryDiv, ...]:
     subs: list[tuple[float, float, int, str]] = []
     for sidx in range(27):
         star_start = sidx * STAR_SPAN_DEG
@@ -85,7 +96,12 @@ def kp_divisions() -> list[HoraryDiv]:
                 )
             )
             cursor = b
-    return divisions
+    return tuple(divisions)
+
+
+@lru_cache(maxsize=None)
+def _division_starts() -> tuple[float, ...]:
+    return tuple(d.start_deg for d in _divisions_tuple())
 
 
 def ascendant_from_kp_number(n: int) -> dict:
@@ -96,7 +112,7 @@ def ascendant_from_kp_number(n: int) -> dict:
     """
     if not 1 <= n <= MAX_HORARY_NUMBER:
         raise ValueError(f"KP horary number must be within 1-{MAX_HORARY_NUMBER}")
-    div = kp_divisions()[n - 1]
+    div = _divisions_tuple()[n - 1]
     mid = div.mid_deg
     info = point_info(mid)
     return {
@@ -114,9 +130,14 @@ def ascendant_from_kp_number(n: int) -> dict:
 
 
 def kp_number_for_longitude(lon: float) -> int | None:
-    """Inverse lookup: which KP horary division contains this sidereal longitude."""
+    """Inverse lookup: which KP horary division contains this sidereal longitude.
+
+    Uses binary search over the cached division-start table, so a single
+    lookup is O(log 249) instead of rescanning the whole zodiac.
+    """
     lon = lon % 360.0
-    for div in kp_divisions():
-        if div.start_deg - 1e-9 <= lon < div.end_deg + 1e-9:
-            return div.number
+    starts = _division_starts()
+    idx = bisect_right(starts, lon) - 1
+    if 0 <= idx < len(starts):
+        return idx + 1
     return None
