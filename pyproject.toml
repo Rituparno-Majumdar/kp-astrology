@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "kpastro"
-version = "0.1.0"
+version = "0.1.1"
 description = "Precise Krishnamurti Paddhati (KP) astrology engine: ayanamsa, nakshatra, sub-lord chain, Placidus cusps, Vimshottari dasha, significators, ruling planets and KP horary."
 readme = "README.md"
 requires-python = ">=3.9"
 license = "MIT"
 license-files = ["LICENSE"]
-authors = [{ name = "Rituparno Majumdar" }]
+authors = [{ name = "Rituparno Majumdar", email = "majumdarrituparno@gmail.com" }]
 keywords = [
     "astrology", "kp", "krishnamurti", "paddhati", "vedic", "jyotish",
     "nakshatra", "sub-lord", "vimshottari", "dasha", "horary", "swisseph",
