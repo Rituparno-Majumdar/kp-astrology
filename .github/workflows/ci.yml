@@ -31,13 +31,15 @@ jobs:
       - name: Install pyswisseph
         run: pip install pyswisseph
 
+      - name: Download Swiss Ephemeris data files (full precision)
+        run: python -m kpastro download-ephemeris
+
       - name: Run test suite
         run: python -m pytest
 
-      - name: Download ephemeris + smoke test CLI
+      - name: Smoke test CLI
         shell: bash
         run: |
-          python -m kpastro download-ephemeris
           python -m kpastro ayanamsa --date 2026-08-20
           python -m kpastro natal --date 1990-01-15 --time 14:30 --tz 5.5 \
             --lat 28.6139 --lon 77.2090 --place "New Delhi" | head -n 5
