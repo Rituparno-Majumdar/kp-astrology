@@ -40,7 +40,13 @@ from .significators import (  # noqa: F401
 )
 from .vedic import format_longitude, point_info, sub_info, sub_sub_info  # noqa: F401
 
-__version__ = "0.1.0"
+from importlib.metadata import PackageNotFoundError, version
+
+__version__ = "0.1.2"
+try:
+    __version__ = version("kpastro")
+except PackageNotFoundError:
+    pass
 
 __all__ = [
     "Balance",
