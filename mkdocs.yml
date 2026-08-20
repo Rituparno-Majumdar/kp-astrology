@@ -1,0 +1,25 @@
+site_name: kpastro
+site_url: https://github.com/Rituparno-Majumdar/kp-astrology
+repo_url: https://github.com/Rituparno-Majumdar/kp-astrology
+repo_name: kp-astrology
+theme:
+  name: material
+  palette:
+    scheme: default
+    primary: deep purple
+  features:
+    - navigation.sections
+    - navigation.top
+nav:
+  - Home: index.md
+  - Installation: installation.md
+  - User guide: user-guide.md
+  - Examples: examples.md
+  - API reference: api-reference.md
+  - Mathematics: mathematics.md
+  - Development: development.md
+  - FAQ: faq.md
+markdown_extensions:
+  - tables
+  - fenced_code
+  - admonition

@@ -4,6 +4,12 @@ All notable changes to **kpastro** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.1.3] - 2026-08-20
+
+- Add in-depth documentation: `docs/` user guide, API reference, worked examples,
+  mathematics and FAQ (MkDocs site buildable via the `docs` extra; shipped in the sdist).
+- Add `MANIFEST.in`; add `Documentation` project URL and `docs` install extra.
+
 ## [0.1.2] - 2026-08-20
 
 - Derive `kpastro.__version__` from installed package metadata so runtime version always matches the PyPI release.

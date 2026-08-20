@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "kpastro"
-version = "0.1.2"
+version = "0.1.3"
 description = "Precise Krishnamurti Paddhati (KP) astrology engine: ayanamsa, nakshatra, sub-lord chain, Placidus cusps, Vimshottari dasha, significators, ruling planets and KP horary."
 readme = "README.md"
 requires-python = ">=3.9"
@@ -39,6 +39,10 @@ dependencies = [
 dev = [
     "pytest>=7.0",
 ]
+docs = [
+    "mkdocs>=1.6",
+    "mkdocs-material>=9.5",
+]
 
 [project.scripts]
 kpastro = "kpastro.cli:main"
@@ -47,6 +51,7 @@ kpastro = "kpastro.cli:main"
 Homepage = "https://github.com/Rituparno-Majumdar/kp-astrology"
 Repository = "https://github.com/Rituparno-Majumdar/kp-astrology"
 Changelog = "https://github.com/Rituparno-Majumdar/kp-astrology/blob/main/CHANGELOG.md"
+Documentation = "https://github.com/Rituparno-Majumdar/kp-astrology/tree/main/docs"
 Issues = "https://github.com/Rituparno-Majumdar/kp-astrology/issues"
 
 [tool.setuptools.packages.find]
