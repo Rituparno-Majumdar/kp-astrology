@@ -1,0 +1,2203 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://rituparno-majumdar.github.io/kp-astrology/api-reference/">
+      
+      
+        <link rel="prev" href="../examples/">
+      
+      
+        <link rel="next" href="../mathematics/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>API reference - kpastro</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#api-reference" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="kpastro" class="md-header__button md-logo" aria-label="kpastro" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            kpastro
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              API reference
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Rituparno-Majumdar/kp-astrology" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kp-astrology
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="kpastro" class="md-nav__button md-logo" aria-label="kpastro" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    kpastro
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Rituparno-Majumdar/kp-astrology" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kp-astrology
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API reference
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#package-root-kpastro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Package root (kpastro)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Package root (kpastro)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#constants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constants
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kpastroconstants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        kpastro.constants
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kpastrovedic-pure-python-kp-subdivision-math" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        kpastro.vedic — pure-Python KP subdivision math
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="kpastro.vedic — pure-Python KP subdivision math">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#module-constants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module constants
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#functions_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data types
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kpastroephemeris-swiss-ephemeris-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        kpastro.ephemeris — Swiss Ephemeris integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="kpastro.ephemeris — Swiss Ephemeris integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#module-constants_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module constants
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default_ephe_path-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        default_ephe_path() -&gt; Path
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#download_ephemeristarget_dirnone-listpath" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        download_ephemeris(target_dir=None) -&gt; list[Path]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ephemeris_version-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ephemeris_version() -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#class-swissephemerisayanamsalahiri-nodemean-ephe_pathnone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        class SwissEphemeris(ayanamsa="lahiri", node="mean", ephe_path=None)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kpastrochart-the-full-kp-chart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        kpastro.chart — the full KP chart
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="kpastro.chart — the full KP chart">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#birthinfo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BirthInfo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#planetpos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PlanetPos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cusppos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CuspPos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chart
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#functions_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kpastrodasha-vimshottari-dasha" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        kpastro.dasha — Vimshottari dasha
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="kpastro.dasha — Vimshottari dasha">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#constants_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constants
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#balance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Balance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#period" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Period
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#functions_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kpastrosignificators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        kpastro.significators
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="kpastro.significators">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#functions_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#types_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kpastrorectification-birth-time-rectification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        kpastro.rectification — birth-time rectification
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="kpastro.rectification — birth-time rectification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lifeevent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LifeEvent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identityinfo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IdentityInfo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scoring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#functions_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output types
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kpastrohorary-the-249-division-kp-number-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        kpastro.horary — the 249-division KP number system
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="kpastro.horary — the 249-division KP number system">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#horarydiv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HoraryDiv
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kpastrocli-the-command-line" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        kpastro.cli — the command line
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mathematics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mathematics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../faq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#package-root-kpastro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Package root (kpastro)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Package root (kpastro)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#constants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constants
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kpastroconstants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        kpastro.constants
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kpastrovedic-pure-python-kp-subdivision-math" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        kpastro.vedic — pure-Python KP subdivision math
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="kpastro.vedic — pure-Python KP subdivision math">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#module-constants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module constants
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#functions_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data types
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kpastroephemeris-swiss-ephemeris-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        kpastro.ephemeris — Swiss Ephemeris integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="kpastro.ephemeris — Swiss Ephemeris integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#module-constants_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module constants
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default_ephe_path-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        default_ephe_path() -&gt; Path
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#download_ephemeristarget_dirnone-listpath" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        download_ephemeris(target_dir=None) -&gt; list[Path]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ephemeris_version-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ephemeris_version() -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#class-swissephemerisayanamsalahiri-nodemean-ephe_pathnone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        class SwissEphemeris(ayanamsa="lahiri", node="mean", ephe_path=None)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kpastrochart-the-full-kp-chart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        kpastro.chart — the full KP chart
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="kpastro.chart — the full KP chart">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#birthinfo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BirthInfo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#planetpos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PlanetPos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cusppos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CuspPos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chart
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#functions_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kpastrodasha-vimshottari-dasha" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        kpastro.dasha — Vimshottari dasha
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="kpastro.dasha — Vimshottari dasha">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#constants_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constants
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#balance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Balance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#period" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Period
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#functions_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kpastrosignificators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        kpastro.significators
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="kpastro.significators">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#functions_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#types_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kpastrorectification-birth-time-rectification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        kpastro.rectification — birth-time rectification
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="kpastro.rectification — birth-time rectification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lifeevent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LifeEvent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identityinfo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IdentityInfo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scoring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#functions_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output types
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kpastrohorary-the-249-division-kp-number-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        kpastro.horary — the 249-division KP number system
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="kpastro.horary — the 249-division KP number system">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#horarydiv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HoraryDiv
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kpastrocli-the-command-line" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        kpastro.cli — the command line
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="api-reference">API reference</h1>
+<p>This page documents every public name of <code>kpastro</code>. The <strong>package root</strong>
+re-exports the most useful symbols; the per-module sections cover the rest.</p>
+<pre><code class="language-python">import kpastro          # convenient public API
+from kpastro import *   # names listed under __all__
+</code></pre>
+<h2 id="package-root-kpastro">Package root (<code>kpastro</code>)</h2>
+<h3 id="types">Types</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Kind</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BirthInfo</code></td>
+<td>dataclass</td>
+<td>Birth/event details (date, time, place, tz)</td>
+</tr>
+<tr>
+<td><code>Chart</code></td>
+<td>dataclass</td>
+<td>Every computed KP layer, ready to render or inspect</td>
+</tr>
+<tr>
+<td><code>Balance</code></td>
+<td>dataclass</td>
+<td>Nested dasha balances anchored to the birth Moon</td>
+</tr>
+<tr>
+<td><code>Period</code></td>
+<td>dataclass</td>
+<td>A dasha period (lord + start/end offsets in days + level)</td>
+</tr>
+<tr>
+<td><code>HoraryDiv</code></td>
+<td>dataclass</td>
+<td>One of the 249 KP horary divisions</td>
+</tr>
+<tr>
+<td><code>RulingPlanet</code></td>
+<td>dataclass</td>
+<td>A ruling planet and the sources it was found through</td>
+</tr>
+<tr>
+<td><code>LifeEvent</code></td>
+<td>dataclass</td>
+<td>A dated life event mapped to KP houses (rectification input)</td>
+</tr>
+<tr>
+<td><code>IdentityInfo</code></td>
+<td>dataclass</td>
+<td>Optional sibling hint for rectification</td>
+</tr>
+<tr>
+<td><code>CandidateScore</code></td>
+<td>dataclass</td>
+<td>Full score of one candidate birth instant</td>
+</tr>
+<tr>
+<td><code>EventScore</code></td>
+<td>dataclass</td>
+<td>Per-event breakdown of a candidate's score</td>
+</tr>
+<tr>
+<td><code>RectificationResult</code></td>
+<td>dataclass</td>
+<td>Full rectification scan, best candidate, credible interval</td>
+</tr>
+<tr>
+<td><code>CredibleInterval</code></td>
+<td>dataclass</td>
+<td>The posterior time-range around the best candidate</td>
+</tr>
+<tr>
+<td><code>TransitConfirmation</code></td>
+<td>dataclass</td>
+<td>Jupiter/Saturn transit cross-check over the events</td>
+</tr>
+<tr>
+<td><code>EventTransit</code></td>
+<td>dataclass</td>
+<td>Whether transit Jupiter/Saturn confirmed one event</td>
+</tr>
+<tr>
+<td><code>SwissEphemeris</code></td>
+<td>class</td>
+<td>Thin wrapper around the Swiss Ephemeris engine</td>
+</tr>
+<tr>
+<td><code>vedic</code></td>
+<td>module</td>
+<td>The pure-Python subdivision math (re-exported)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="functions">Functions</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>compute_chart(birth, ayanamsa="lahiri", node="mean", eph=None) -&gt; Chart</code></td>
+<td>Compute every KP layer for a birth chart</td>
+</tr>
+<tr>
+<td><code>render_chart(chart) -&gt; str</code></td>
+<td>Human-readable multi-section chart text</td>
+</tr>
+<tr>
+<td><code>dasha_balance(moon_longitude) -&gt; Balance</code></td>
+<td>Nested balances from the sidereal birth Moon</td>
+</tr>
+<tr>
+<td><code>mahadasha_timeline(moon_longitude, epochs=1) -&gt; list[Period]</code></td>
+<td>All mahadashas from birth</td>
+</tr>
+<tr>
+<td><code>antardashas_of(period, balance=None) -&gt; list[Period]</code></td>
+<td>The nine antardashas of a mahadasha</td>
+</tr>
+<tr>
+<td><code>current_periods(moon_longitude, epoch, instant, depth=3) -&gt; dict[int, Period]</code></td>
+<td>MD/AD/PD active at an instant</td>
+</tr>
+<tr>
+<td><code>kp_divisions() -&gt; list[HoraryDiv]</code></td>
+<td>The 249 KP divisions of the zodiac</td>
+</tr>
+<tr>
+<td><code>ascendant_from_kp_number(n) -&gt; dict</code></td>
+<td>Horary ascendant (division midpoint) + lord chain</td>
+</tr>
+<tr>
+<td><code>kp_number_for_longitude(lon) -&gt; int | None</code></td>
+<td>Inverse: which division contains a longitude</td>
+</tr>
+<tr>
+<td><code>planet_significations(positions, cusps) -&gt; dict[str, list[Signification]]</code></td>
+<td>Grah Nirdeshan</td>
+</tr>
+<tr>
+<td><code>house_significations(positions, cusps) -&gt; list[list[tuple[str, int]]]</code></td>
+<td>Bhaav Nirdeshan with tiers</td>
+</tr>
+<tr>
+<td><code>ruling_planets(ascendant_lon, moon_lon, weekday) -&gt; list[RulingPlanet]</code></td>
+<td>RPs of a moment</td>
+</tr>
+<tr>
+<td><code>rectify(birth, approx_time, events, window_min=60, step_min=1, ...)</code></td>
+<td>Scan for the most probable birth time (see below)</td>
+</tr>
+<tr>
+<td><code>score_candidate(jd_ut, lat, lon, events, ...) -&gt; CandidateScore</code></td>
+<td>Score a single candidate instant</td>
+</tr>
+<tr>
+<td><code>aspects_from_house(house, planet) -&gt; set[int]</code></td>
+<td>Houses aspected by a planet in a given house</td>
+</tr>
+<tr>
+<td><code>house_significator_sets(positions, cusps) -&gt; (dict, dict)</code></td>
+<td>Rectification-flavour per-house significators</td>
+</tr>
+<tr>
+<td><code>transit_confirmation(jd_ut, lat, lon, events, ...) -&gt; TransitConfirmation</code></td>
+<td>Jupiter/Saturn transit cross-check</td>
+</tr>
+<tr>
+<td><code>credible_interval(candidates, target_mass=0.75) -&gt; CredibleInterval</code></td>
+<td>Post-process the candidate scores into a time range</td>
+</tr>
+<tr>
+<td><code>render_rectification(result, birth, limit=12) -&gt; str</code></td>
+<td>Human-readable rectification report</td>
+</tr>
+<tr>
+<td><code>point_info(lon) -&gt; PointInfo</code></td>
+<td>Full KP breakdown of one sidereal longitude</td>
+</tr>
+<tr>
+<td><code>sub_info(lon) -&gt; SubInfo</code> / <code>sub_sub_info(lon) -&gt; SubSubInfo</code></td>
+<td>Sub-lord chain lookup</td>
+</tr>
+<tr>
+<td><code>format_longitude(lon, arcsec=True) -&gt; str</code></td>
+<td>Render <code>D°MM'SS"</code></td>
+</tr>
+<tr>
+<td><code>download_ephemeris(target_dir=None) -&gt; list[Path]</code></td>
+<td>Fetch the Swiss Ephemeris data files</td>
+</tr>
+<tr>
+<td><code>ephemeris_version() -&gt; str</code></td>
+<td>Installed Swiss Ephemeris engine version</td>
+</tr>
+</tbody>
+</table>
+<h3 id="constants">Constants</h3>
+<p><code>kpastro.__version__</code> (str), matching the installed distribution version.</p>
+<p><br></p>
+<hr />
+<h2 id="kpastroconstants"><code>kpastro.constants</code></h2>
+<p>Static KP tables and a small helper. All are frozen data.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>VIMSHOTTARI_ORDER</code></td>
+<td><code>tuple[str, ...]</code></td>
+<td>Ketu, Venus, Sun, Moon, Mars, Rahu, Jupiter, Saturn, Mercury</td>
+</tr>
+<tr>
+<td><code>VIMSHOTTARI_YEARS</code></td>
+<td><code>dict[str, int]</code></td>
+<td>Mahadasha years per planet (sum 120)</td>
+</tr>
+<tr>
+<td><code>VIMSHOTTARI_INDEX</code></td>
+<td><code>dict[str, int]</code></td>
+<td>Position (0–8) of each planet in the order</td>
+</tr>
+<tr>
+<td><code>VIMSHOTTARI_TOTAL_YEARS</code></td>
+<td><code>int</code></td>
+<td><code>120</code></td>
+</tr>
+<tr>
+<td><code>PLANET_ABBR</code></td>
+<td><code>dict[str, str]</code></td>
+<td>Short symbols: <code>Sun → "Su"</code>, <code>Moon → "Mo"</code>, ...</td>
+</tr>
+<tr>
+<td><code>SIGNS</code></td>
+<td><code>tuple[str, ...]</code></td>
+<td>12 rashis from Aries</td>
+</tr>
+<tr>
+<td><code>SIGN_LORDS</code></td>
+<td><code>dict[str, str]</code></td>
+<td>Sign-lord of each rashi</td>
+</tr>
+<tr>
+<td><code>SIGNS_RULED_BY</code></td>
+<td><code>dict[str, tuple[str, ...]]</code></td>
+<td>Rashis ruled by each planet (Rahu/Ketu: <code>()</code> )</td>
+</tr>
+<tr>
+<td><code>NAKSHATRAS</code></td>
+<td><code>tuple[str, ...]</code></td>
+<td>The 27 nakshatras, Ashwini → Revati</td>
+</tr>
+<tr>
+<td><code>NAKSHATRA_LORDS_BASE</code></td>
+<td><code>tuple[str, ...]</code></td>
+<td>Star-lord of star <code>i</code> is <code>i % 9</code></td>
+</tr>
+<tr>
+<td><code>WEEKDAY_LORDS</code></td>
+<td><code>tuple[str, ...]</code></td>
+<td>Monday → Sunday lords (Moon, Mars, Mercury, Jupiter, Venus, Saturn, Sun)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Function</strong> — <code>star_lord_of_index(idx: int) -&gt; str</code>: Vimshottari star-lord of
+nakshatra <code>idx</code> (0–26).</p>
+<p><br></p>
+<hr />
+<h2 id="kpastrovedic-pure-python-kp-subdivision-math"><code>kpastro.vedic</code> — pure-Python KP subdivision math</h2>
+<p>No ephemeris is needed: everything derives from a single sidereal longitude.</p>
+<h3 id="module-constants">Module constants</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>STAR_SPAN_ARCMIN</code></td>
+<td><code>800.0</code> — nakshatra span in arc-minutes (13°20')</td>
+</tr>
+<tr>
+<td><code>STAR_SPAN_DEG</code></td>
+<td><code>13.333...</code>° — nakshatra span in degrees</td>
+</tr>
+<tr>
+<td><code>PADA_SPAN_DEG</code></td>
+<td><code>3.333...</code>° — pada (quarter) span</td>
+</tr>
+</tbody>
+</table>
+<h3 id="functions_1">Functions</h3>
+<ul>
+<li><code>normalize_longitude(lon) -&gt; float</code> — fold into <code>[0, 360)</code>.</li>
+<li><code>sub_span_arcmin(lord) -&gt; float</code> — sub width: <code>years/120 * 800'</code>.</li>
+<li><code>format_longitude(lon, arcsec=True) -&gt; str</code> — <code>D°MM'SS"</code>, or <code>D°MM'</code> without seconds.</li>
+<li><code>sign_index(lon) -&gt; int</code>, <code>sign_name(lon) -&gt; str</code>, <code>sign_lord_of_longitude(lon) -&gt; str</code>.</li>
+<li><code>star_index(lon) -&gt; int</code> (0–26), <code>star_name(lon) -&gt; str</code>, <code>star_lord(lon) -&gt; str</code>,
+  <code>star_span(lon) -&gt; tuple[float, float]</code> (start, end of the star).</li>
+<li><code>pada_info(lon) -&gt; PadaInfo</code> — quarter (<code>pada</code>, <code>start_deg</code>, <code>end_deg</code>).</li>
+<li><code>sub_info(lon) -&gt; SubInfo</code> — sub-lord within the star (<code>lord</code>, <code>index</code>, <code>start_deg</code>,
+  <code>end_deg</code>, <code>span_arcmin</code>).</li>
+<li><code>sub_lord(lon) -&gt; str</code>, <code>sub_sub_lord(lon) -&gt; str</code>.</li>
+<li><code>sub_sub_info(lon) -&gt; SubSubInfo</code> — sub divided again with the same proportions.</li>
+<li><code>point_info(lon) -&gt; PointInfo</code> — aggregated breakdown (see table below).</li>
+</ul>
+<h3 id="data-types">Data types</h3>
+<pre><code>PadaInfo(lon)    -&gt; pada, start_deg, end_deg
+SubInfo(lon)     -&gt; lord, index, start_deg, end_deg, span_arcmin
+SubSubInfo(lon)  -&gt; lord, index, start_deg, end_deg, span_arcmin
+PointInfo(lon)   -&gt; longitude, sign, sign_lord, sign_degree, star, star_lord,
+                    star_index, sub_lord, sub_sub_lord, pada
+</code></pre>
+<p><br></p>
+<hr />
+<h2 id="kpastroephemeris-swiss-ephemeris-integration"><code>kpastro.ephemeris</code> — Swiss Ephemeris integration</h2>
+<h3 id="module-constants_1">Module constants</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AYANAMSA_MODES</code></td>
+<td><code>{"lahiri": SE_SIDM_LAHIRI, "kp": SE_SIDM_KRISHNAMURTI_VP291, "kp_old": SE_SIDM_KRISHNAMURTI}</code></td>
+</tr>
+<tr>
+<td><code>NODES</code></td>
+<td><code>{"mean": MEAN_NODE, "true": TRUE_NODE}</code></td>
+</tr>
+<tr>
+<td><code>SWE_BODY</code></td>
+<td>Swiss body ids for Sun → Saturn</td>
+</tr>
+<tr>
+<td><code>PLANET_OUTPUT_ORDER</code></td>
+<td>Sun, Moon, Mars, Mercury, Jupiter, Venus, Saturn, Rahu, Ketu</td>
+</tr>
+<tr>
+<td><code>EPHEMERIS_FILES</code></td>
+<td><code>("sepl_18.se1", "semo_18.se1", "seas_18.se1")</code></td>
+</tr>
+<tr>
+<td><code>EPHEMERIS_BASE_URL</code></td>
+<td>Official aloistr/swisseph ephe mirror</td>
+</tr>
+</tbody>
+</table>
+<h3 id="default_ephe_path-path"><code>default_ephe_path() -&gt; Path</code></h3>
+<p><code>~/.kpastro/ephe</code> — where data files live by default.</p>
+<h3 id="download_ephemeristarget_dirnone-listpath"><code>download_ephemeris(target_dir=None) -&gt; list[Path]</code></h3>
+<p>Downloads the three <code>*.se1</code> files (skipping any already present and non-empty)
+into <code>target_dir</code> or the default path, returning the saved paths.</p>
+<h3 id="ephemeris_version-str"><code>ephemeris_version() -&gt; str</code></h3>
+<p>The version string of the linked Swiss Ephemeris engine (e.g. <code>"2.10.03"</code>).</p>
+<h3 id="class-swissephemerisayanamsalahiri-nodemean-ephe_pathnone"><code>class SwissEphemeris(ayanamsa="lahiri", node="mean", ephe_path=None)</code></h3>
+<p>A safe, reusable wrapper around the (process-global) Swiss Ephemeris engine.</p>
+<ul>
+<li>Raises <code>ValueError</code> for unknown ayanamsa/node values.</li>
+<li>The ephemeris path resolves as <code>ephe_path</code> → <code>SE_EPHE_PATH</code> env var →
+  <code>~/.kpastro/ephe</code>; if the directory exists it is registered with the engine.</li>
+<li><code>data_files_present -&gt; bool</code> — are all three <code>*.se1</code> files present?</li>
+<li><code>jd_ut(dt: datetime) -&gt; float</code> — Julian date (UT) for a naive-UTC datetime.</li>
+<li><code>ayanamsa(jd_ut) -&gt; float</code> — ayanamsa in degrees (sidereal mode is re-applied).</li>
+<li><code>tropical_positions(jd_ut) -&gt; dict[str, (lon, speed)]</code> — geocentric, tropical.</li>
+<li><code>sidereal_positions(jd_ut) -&gt; dict[str, (lon, speed)]</code> — ayanamsa subtracted.</li>
+<li><code>houses(jd_ut, lat, lon) -&gt; (cusps, asc, mc, armc)</code> — Placidus cusps and angles,
+  everything normalized to the sidereal zodiac; <code>cusps</code> is always 12 entries
+  (handles both the 12-element <code>pyswisseph</code> and 13-element <code>pysweph</code> layouts).</li>
+</ul>
+<p>Ketu's longitude is defined as Rahu + 180° (standard practice).</p>
+<p><br></p>
+<hr />
+<h2 id="kpastrochart-the-full-kp-chart"><code>kpastro.chart</code> — the full KP chart</h2>
+<h3 id="birthinfo"><code>BirthInfo</code></h3>
+<pre><code class="language-python">BirthInfo(date, time, latitude, longitude, tz_hours=0.0, place=&quot;&quot;)
+</code></pre>
+<ul>
+<li><code>date: datetime.date</code>, <code>time: datetime.time</code> — <strong>local</strong> wall-clock time.</li>
+<li><code>tz_hours: float</code> — UTC offset (India: <code>5.5</code>; negative west of Greenwich).</li>
+<li><code>.utc_datetime() -&gt; datetime</code> — converts local → UTC (<code>local - timedelta(hours=tz)</code>).</li>
+</ul>
+<h3 id="planetpos"><code>PlanetPos</code></h3>
+<pre><code>name, longitude (sidereal, deg), house (1–12), sign, sign_degree, sign_lord,
+star, star_lord, sub_lord, sub_sub_lord, pada, speed_deg_day, retrograde
+</code></pre>
+<h3 id="cusppos"><code>CuspPos</code></h3>
+<pre><code>house, longitude (sidereal, deg), sign, sign_lord, star, star_lord, sub_lord, sub_sub_lord
+</code></pre>
+<h3 id="chart"><code>Chart</code></h3>
+<p><code>compute_chart</code> returns a <code>Chart</code> whose fields give typed access to every layer:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>birth</code></td>
+<td><code>BirthInfo</code></td>
+<td>Input details</td>
+</tr>
+<tr>
+<td><code>jd_ut</code></td>
+<td><code>float</code></td>
+<td>Julian date used</td>
+</tr>
+<tr>
+<td><code>ayanamsa</code></td>
+<td><code>float</code></td>
+<td>Ayanamsa value in degrees</td>
+</tr>
+<tr>
+<td><code>ayanamsa_mode</code></td>
+<td><code>str</code> / <code>node</code></td>
+<td><code>str</code> — the modes used</td>
+</tr>
+<tr>
+<td><code>planets</code></td>
+<td><code>list[PlanetPos]</code></td>
+<td>All 9 planets</td>
+</tr>
+<tr>
+<td><code>cusps</code></td>
+<td><code>list[CuspPos]</code></td>
+<td>12 Placidus cusps</td>
+</tr>
+<tr>
+<td><code>ascendant</code> / <code>midheaven</code> / <code>armc</code></td>
+<td><code>float</code></td>
+<td>Sidereal angles</td>
+</tr>
+<tr>
+<td><code>planet_lon</code></td>
+<td><code>dict[str, float]</code></td>
+<td>Planet → sidereal longitude</td>
+</tr>
+<tr>
+<td><code>balance</code></td>
+<td><code>Balance</code></td>
+<td>Moon-anchored dasha balances</td>
+</tr>
+<tr>
+<td><code>mahadashas</code></td>
+<td><code>list[Period]</code></td>
+<td>Full mahadasha timeline</td>
+</tr>
+<tr>
+<td><code>current</code></td>
+<td><code>dict[int, Period]</code></td>
+<td>MD(1)/AD(2)/PD(3) at the birth instant</td>
+</tr>
+<tr>
+<td><code>planet_significators</code></td>
+<td><code>dict[str, list[Signification]]</code></td>
+<td>Grah Nirdeshan</td>
+</tr>
+<tr>
+<td><code>house_significators</code></td>
+<td><code>list[list[tuple[str, int]]]</code></td>
+<td>Bhaav Nirdeshan with tiers</td>
+</tr>
+<tr>
+<td><code>cusp_sublords</code></td>
+<td><code>dict[int, str]</code></td>
+<td>Sub-lord of each house cusp</td>
+</tr>
+<tr>
+<td><code>ruling</code></td>
+<td><code>list[RulingPlanet]</code></td>
+<td>RPs of the birth moment</td>
+</tr>
+</tbody>
+</table>
+<h3 id="functions_2">Functions</h3>
+<ul>
+<li><code>compute_chart(birth, ayanamsa="lahiri", node="mean", eph=None) -&gt; Chart</code> —
+  every KP layer in one call. Reuse a single <code>SwissEphemeris</code> across many charts
+  via <code>eph=</code> to avoid re-registering the engine.</li>
+<li><code>render_chart(chart) -&gt; str</code> — the full multi-section text chart.</li>
+<li><code>render_planets(chart)</code>, <code>render_cusps(chart)</code>, <code>render_significators(chart)</code>,
+  <code>render_ruling(chart)</code>, <code>render_dasha(chart) -&gt; str</code> — individual sections.</li>
+</ul>
+<p><br></p>
+<hr />
+<h2 id="kpastrodasha-vimshottari-dasha"><code>kpastro.dasha</code> — Vimshottari dasha</h2>
+<p>The mahadasha sequence is fixed: Ketu 7, Venus 20, Sun 6, Moon 10, Mars 7,
+Rahu 18, Jupiter 16, Saturn 19, Mercury 17 (120 years). 1 dasha year = 365.25 days.</p>
+<h3 id="constants_1">Constants</h3>
+<p><code>DAYS_PER_YEAR = 365.25</code>, <code>CYCLE_DAYS = 120 * DAYS_PER_YEAR</code>.</p>
+<h3 id="balance"><code>Balance</code></h3>
+<pre><code>mahadasha_lord, mahadasha_years, mahadasha_days,
+active_ad_lord, active_ad_days, active_pd_lord, active_pd_days,
+nakshatra, nakshatra_index
+</code></pre>
+<h3 id="period"><code>Period</code></h3>
+<pre><code>lord, start_days, end_days, level          # level 1=MD, 2=AD, 3=PD
+.duration_days / .duration_years           # properties
+.as_datetimes(epoch: datetime) -&gt; (start, end)
+</code></pre>
+<h3 id="functions_3">Functions</h3>
+<ul>
+<li><code>period_days(parent_lord, child_lord) -&gt; float</code> — full sub-period length:
+  <code>years(parent) * years(child) / 120 * 365.25</code>.</li>
+<li><code>mahadasha_days(lord) -&gt; float</code> — <code>years(lord) * 365.25</code>.</li>
+<li><code>dasha_balance(moon_longitude) -&gt; Balance</code> — nested balances from the sidereal
+  birth Moon longitude (MD anchored to the star, AD to the sub, PD to the sub-sub).</li>
+<li><code>mahadasha_timeline(moon_longitude, epochs=1) -&gt; list[Period]</code> — all mahadashas
+  from birth, the opening one truncated to the balance; <code>epochs</code> repeats full cycles.</li>
+<li><code>antardashas_of(period, balance=None) -&gt; list[Period]</code> — the nine antardashas.
+  For the opening (balance) mahadasha, starts at the Moon's sub-lord and the first
+  AD is truncated to the AD balance.</li>
+<li><code>pratyantardashas_of(ad, balance=None, md_is_partial=False) -&gt; list[Period]</code> —
+  the nine pratyantardashas of an antardasha (refined only for the birth AD).</li>
+<li><code>current_periods(moon_longitude, epoch, instant, depth=3) -&gt; dict[int, Period]</code> —
+  active MD(1)/AD(2)/PD(3) at <code>instant</code>. Raises <code>ValueError</code> if the instant falls
+  outside the timelines.</li>
+<li><code>format_days(days) -&gt; str</code> — <code>Yy Mm Dd</code> (year 365.25d, month 30.4375d).</li>
+</ul>
+<p><br></p>
+<hr />
+<h2 id="kpastrosignificators"><code>kpastro.significators</code></h2>
+<p>Significator rules: a planet signifies a house by <strong>occupation</strong>, by
+<strong>sign-lordship</strong> (owning the sign on the cusp), and by <strong>star-lord agency</strong>
+(its star-lord occupies or owns the house). RPs are the day-lord and the
+Ascendant/Moon sign/star/sub lords.</p>
+<h3 id="functions_4">Functions</h3>
+<ul>
+<li><code>house_of_longitude(lon, cusps) -&gt; int</code> — house 1–12 containing a longitude
+  (cusps listed in order; house 12 wraps to cusp 1 + 360°).</li>
+<li><code>house_of_sign(sign_num, cusps) -&gt; int</code> — house containing the start of sign 0–11.</li>
+<li><code>planet_significations(positions, cusps, star_lords_cache=None) -&gt; dict[str, list[Signification]]</code>
+  — every house each planet signifies and why (<code>by_occupation</code>, <code>by_sign_lordship</code>,
+  <code>by_star_lord</code> booleans).</li>
+<li><code>house_significations(positions, cusps) -&gt; list[list[tuple[str, int]]]</code> —
+  per-house planets with tiers: <strong>1</strong> occupant, <strong>2</strong> in an occupant's star,
+  <strong>3</strong> cuspal lord, <strong>4</strong> in the cuspal lord's star.</li>
+<li><code>cusp_sub_lords(cusps) -&gt; dict[int, str]</code> — the KP judge of each house.</li>
+<li><code>ruling_planets(ascendant_lon, moon_lon, weekday) -&gt; list[RulingPlanet]</code> —
+  weekday: <code>datetime.weekday()</code> convention, 0=Monday … 6=Sunday. Sources merge
+  (a planet that is both day-lord and asc-sign-lord has both sources listed).</li>
+</ul>
+<h3 id="types_1">Types</h3>
+<pre><code>Signification(house, by_occupation, by_sign_lordship, by_star_lord)
+RulingPlanet(planet, source)      # source e.g. &quot;day lord&quot;, &quot;asc sign lord, asc star lord&quot;
+</code></pre>
+<p><br></p>
+<hr />
+<h2 id="kpastrorectification-birth-time-rectification"><code>kpastro.rectification</code> — birth-time rectification</h2>
+<p>Recovers an approximate/unknown birth time from dated <strong>life events</strong> judged to
+fall in specific KP houses. Ported from the classic KP "time of birth" web tool
+and rebased on the Swiss Ephemeris. It is an <strong>API feature</strong> (not yet a CLI
+subcommand).</p>
+<h3 id="lifeevent"><code>LifeEvent</code></h3>
+<pre><code class="language-python">LifeEvent(date, primary, secondary=(), label=&quot;&quot;, time=time(12, 0))
+</code></pre>
+<ul>
+<li><code>date: datetime.date</code> — when the event happened (default moment is local noon).</li>
+<li><code>primary: int</code> — the main KP house (1–12) the event fell into.</li>
+<li><code>secondary: tuple[int, ...]</code> — extra houses the event also connected to.</li>
+<li><code>label: str</code> — free text shown in reports (e.g. "Marriage").</li>
+<li><code>.jd_ut(tz_hours, eph) -&gt; float</code> — the event moment as a Julian date (UT).</li>
+</ul>
+<h3 id="identityinfo"><code>IdentityInfo</code></h3>
+<pre><code class="language-python">IdentityInfo(siblings=None)
+</code></pre>
+<p>A weak biographical hint: with siblings, house 3 is expected to be occupied; an
+only child usually has it empty. <code>None</code> disables the hint.</p>
+<h3 id="scoring">Scoring</h3>
+<p>For every candidate minute <code>score_candidate</code> computes the KP significator set
+of each house (cusp sub-lord + occupants and their star-lords + aspecting
+planets and their star-lords) and the lagna sub-lord (LSL):</p>
+<pre><code>total = lsl_score + 0.5 * dasha_score + rp_score + identity_score
+</code></pre>
+<ul>
+<li><strong>LSL</strong> — +2 when the LSL is a significator of the event's primary house, +1
+  per secondary house it appears in, all scaled by the specificity weight
+  <code>max(0, min(1, (12 − n) / 9))</code> where <code>n</code> is how many houses the LSL
+  signifies (a "common" significator's testimony is weak).</li>
+<li><strong>Dasha</strong> — the mahadasha / antardasha / pratyantar lords running at the
+  event (anchored to the candidate birth moment) add <code>1 / 1 / 0.5</code> for a
+  primary-house hit and a quarter of that for a secondary-house hit. Events with
+  <code>dasha_score &lt; 1</code> are reported as <strong>strikes</strong>.</li>
+<li><strong>RP</strong> — +1 if the LSL is in the classic five-lord ruling-planet set of the
+  analysis moment (day lord + asc/moon sign and star lords; optional).</li>
+<li><strong>Identity</strong> — +0.25 if the sibling hint is satisfied (optional).</li>
+</ul>
+<h3 id="functions_5">Functions</h3>
+<ul>
+<li><code>rectify(birth, approx_time, events, window_min=60.0, step_min=1.0, *,
+  use_rp=False, analysis_time=None, identity=None, ayanamsa="lahiri",
+  node="true", eph=None) -&gt; RectificationResult</code> — scans
+  <code>±window_min</code> minutes around <code>approx_time</code> (a <code>datetime</code> or a <code>time</code> combined
+  with <code>birth.date</code>) in <code>step_min</code> steps and ranks every candidate.</li>
+<li><code>score_candidate(jd_ut, latitude, longitude, events, tz_hours=0.0,
+  rp_set=None, identity=None, eph=None, approx_jd=None, event_jds=None) -&gt; CandidateScore</code> —
+  score one candidate instant directly.</li>
+<li><code>aspects_from_house(house, planet) -&gt; set[int]</code> — houses aspected by a planet
+  sitting in a house (KP aspects: everyone takes the 7th; Mars adds 4th/8th,
+  Jupiter 5th/9th, Saturn 3rd/10th).</li>
+<li><code>house_significator_sets(positions, cusps, star_lord_cache=None)
+  -&gt; (sets, house_map)</code> — the rectification-flavour per-house significators.</li>
+<li><code>transit_confirmation(jd_ut, latitude, longitude, events, tz_hours=0.0,
+  eph=None) -&gt; TransitConfirmation</code> — counts how often transit Jupiter/Saturn
+  sit in a longitude whose star- or sign-lord is a significator of the event's
+  primary house (2 × <code>len(events)</code> checks; not folded into the score).</li>
+<li><code>credible_interval(candidates, target_mass=0.75) -&gt; CredibleInterval</code> —
+  softmax over the scores (temperature 1.5), then the smallest contiguous time
+  span holding the target posterior mass.</li>
+<li><code>render_rectification(result, birth, limit=12) -&gt; str</code> — the report.</li>
+</ul>
+<p>Rectification uses the <strong>true</strong> node by default (matching the reference tool);
+pass <code>node="mean"</code> for the traditional KP convention.</p>
+<h3 id="output-types">Output types</h3>
+<pre><code>CandidateScore(jd_ut, offset_minutes, lsl, specificity, n_significating_houses,
+               lsl_score, dasha_score, rp_score, identity_score, total,
+               strikes, events)
+EventScore(label, date, primary, secondary, lsl_score, lsl_hit, dasha_score,
+           dasha_hit, mahadasha_lord, antardasha_lord, pratyantar_lord)
+RectificationResult(approx_ut, candidates, best, credible, settings, events)
+CredibleInterval(start_ut, end_ut, peak_ut, mass, spread_minutes)
+TransitConfirmation(matched, total, per_event)
+EventTransit(label, date, jupiter, saturn)
+</code></pre>
+<p><br></p>
+<hr />
+<h2 id="kpastrohorary-the-249-division-kp-number-system"><code>kpastro.horary</code> — the 249-division KP number system</h2>
+<p>27 nakshatras × 9 sub-lords = 243 subs; six sign boundaries fall <em>inside</em> a sub
+and split it, giving exactly <strong>249</strong> numbered divisions from 0° Aries.</p>
+<ul>
+<li><code>MAX_HORARY_NUMBER = 249</code>.</li>
+<li><code>kp_divisions() -&gt; list[HoraryDiv]</code> — 249 divisions in ascending zodiacal order.</li>
+<li><code>ascendant_from_kp_number(n) -&gt; dict</code> — <code>{"number", "ascendant" (division
+  midpoint), "span" (start, end), "sign", "sign_lord", "star", "star_lord",
+  "sub_lord", "sub_sub_lord", "pada"}</code>. Raises <code>ValueError</code> if <code>n</code> is outside 1–249.</li>
+<li><code>kp_number_for_longitude(lon) -&gt; int | None</code> — which division contains a longitude.</li>
+</ul>
+<h3 id="horarydiv"><code>HoraryDiv</code></h3>
+<pre><code>number, start_deg, end_deg, sign, sign_lord, star, star_lord, sub_lord
+.mid_deg  # (start + end)/2, used as the horary ascendant
+</code></pre>
+<p><br></p>
+<hr />
+<h2 id="kpastrocli-the-command-line"><code>kpastro.cli</code> — the command line</h2>
+<ul>
+<li><code>build_parser() -&gt; argparse.ArgumentParser</code></li>
+<li><code>main(argv=None) -&gt; int</code></li>
+</ul>
+<p>Entry points: <code>kpastro</code> console script (see <code>pyproject.toml</code>) and
+<code>python -m kpastro</code> (<code>kpastro/__main__.py</code>). Subcommands: <code>natal</code>, <code>horary</code>,
+<code>dasha</code>, <code>rulings</code>, <code>ayanamsa</code>, <code>download-ephemeris</code> — see the
+<a href="../user-guide/">user guide</a>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

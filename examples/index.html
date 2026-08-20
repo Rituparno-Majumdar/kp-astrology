@@ -1,0 +1,976 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://rituparno-majumdar.github.io/kp-astrology/examples/">
+      
+      
+        <link rel="prev" href="../user-guide/">
+      
+      
+        <link rel="next" href="../api-reference/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Examples - kpastro</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#examples-python-api" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="kpastro" class="md-header__button md-logo" aria-label="kpastro" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            kpastro
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Examples
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Rituparno-Majumdar/kp-astrology" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kp-astrology
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="kpastro" class="md-nav__button md-logo" aria-label="kpastro" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    kpastro
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Rituparno-Majumdar/kp-astrology" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kp-astrology
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-a-complete-birth-chart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. A complete birth chart
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. A complete birth chart">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#typed-access-to-every-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Typed access to every layer
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-reuse-one-engine-across-many-charts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Reuse one engine across many charts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-vimshottari-dasha" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Vimshottari dasha
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-kp-horary-prashna" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. KP horary (prashna)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-sub-division-math-without-an-ephemeris" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Sub-division math without an ephemeris
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-ruling-planets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Ruling planets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-significators-grah-nirdeshan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Significators (Grah Nirdeshan)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-full-precision-live" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Full precision live
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-birth-time-rectification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Birth-time rectification
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mathematics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mathematics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../faq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-a-complete-birth-chart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. A complete birth chart
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. A complete birth chart">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#typed-access-to-every-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Typed access to every layer
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-reuse-one-engine-across-many-charts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Reuse one engine across many charts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-vimshottari-dasha" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Vimshottari dasha
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-kp-horary-prashna" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. KP horary (prashna)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-sub-division-math-without-an-ephemeris" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Sub-division math without an ephemeris
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-ruling-planets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Ruling planets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-significators-grah-nirdeshan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Significators (Grah Nirdeshan)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-full-precision-live" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Full precision live
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-birth-time-rectification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Birth-time rectification
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="examples-python-api">Examples — Python API</h1>
+<p>All examples below assume:</p>
+<pre><code class="language-python">from datetime import date, datetime, time, timedelta
+from kpastro import (
+    BirthInfo, compute_chart, render_chart,
+    kp_divisions, ascendant_from_kp_number, kp_number_for_longitude,
+    dasha_balance, current_periods, planet_significations,
+    house_significations, ruling_planets, point_info,
+    LifeEvent, IdentityInfo, rectify, render_rectification,
+    transit_confirmation,
+    download_ephemeris,
+)
+</code></pre>
+<h2 id="1-a-complete-birth-chart">1. A complete birth chart</h2>
+<pre><code class="language-python">birth = BirthInfo(
+    date=date(1990, 1, 15), time=time(14, 30),
+    latitude=28.6139, longitude=77.2090,
+    tz_hours=5.5, place=&quot;New Delhi&quot;,
+)
+chart = compute_chart(birth, ayanamsa=&quot;lahiri&quot;)
+print(render_chart(chart))
+</code></pre>
+<p><code>chart</code> is a <code>Chart</code> — you can ignore the text rendering and use the data
+directly:</p>
+<pre><code class="language-python">for p in chart.planets:
+    print(f&quot;{p.name:8} {p.sign:10} star {p.star:16} sub {p.sub_lord:8} &quot;
+          f&quot;house {p.house:2} retro {'R' if p.retrograde else '.'}&quot;)
+
+print(&quot;Cusp 1 sub-lord:&quot;, chart.cusp_sublords[1])
+print(&quot;Ascendant:&quot;, chart.ascendant, &quot;deg&quot;, &quot;| MC:&quot;, chart.midheaven, &quot;deg&quot;)
+print(&quot;At birth:&quot;,
+      chart.current[1].lord, &quot;/&quot;, chart.current[2].lord, &quot;/&quot;, chart.current[3].lord)
+</code></pre>
+<h3 id="typed-access-to-every-layer">Typed access to every layer</h3>
+<pre><code class="language-python">balance = chart.balance
+print(f&quot;Maha-dasha: {balance.mahadasha_lord} &quot;
+      f&quot;({balance.mahadasha_years:.2f} y / {balance.mahadasha_days:.1f} d) &quot;
+      f&quot;in {balance.nakshatra}&quot;)
+
+for house, tiers in enumerate(chart.house_significators, start=1):
+    sig = &quot;, &quot;.join(f&quot;{pl}({t})&quot; for pl, t in tiers) or &quot;—&quot;
+    print(f&quot;H{house:&gt;2}: {sig}&quot;)
+</code></pre>
+<h2 id="2-reuse-one-engine-across-many-charts">2. Reuse one engine across many charts</h2>
+<p>The Swiss Ephemeris holds process-global state, so constructing one
+<code>SwissEphemeris</code> and passing it in is both faster and cleaner:</p>
+<pre><code class="language-python">from kpastro import SwissEphemeris
+
+eph = SwissEphemeris(ayanamsa=&quot;lahiri&quot;, node=&quot;mean&quot;)
+
+charts = [
+    compute_chart(BirthInfo(date(1990,1,15), time(14,30), 28.6139, 77.2090, 5.5, &quot;New Delhi&quot;), eph=eph),
+    compute_chart(BirthInfo(date(1988,12,9), time(9,15), 19.0760, 72.8777, 5.5, &quot;Mumbai&quot;), eph=eph),
+]
+</code></pre>
+<h2 id="3-vimshottari-dasha">3. Vimshottari dasha</h2>
+<pre><code class="language-python">from datetime import datetime, timedelta
+
+moon = compute_chart(birth).planet_lon[&quot;Moon&quot;]
+
+bal = dasha_balance(moon)
+print(f&quot;{bal.mahadasha_lord}: MD {bal.mahadasha_days:.0f}d &quot;
+      f&quot;| AD {bal.active_ad_lord} {bal.active_ad_days:.0f}d &quot;
+      f&quot;| PD {bal.active_pd_lord} {bal.active_pd_days:.0f}d&quot;)
+
+epoch = datetime(1990, 1, 15, 14, 30) - timedelta(hours=5.5)
+active = current_periods(moon, epoch, datetime(2026, 1, 1, 12, 0))
+print(f&quot;On 2026-01-01: MD {active[1].lord}, AD {active[2].lord}, PD {active[3].lord}&quot;)
+</code></pre>
+<h2 id="4-kp-horary-prashna">4. KP horary (prashna)</h2>
+<pre><code class="language-python">q = ascendant_from_kp_number(45)
+print(f&quot;Number {q['number']}: asc {q['ascendant']:.4f} deg {q['sign']} &quot;
+      f&quot;star {q['star']} ({q['star_lord']}), sub {q['sub_lord']}&quot;)
+
+division_count = len(kp_divisions())      # exactly 249
+back = kp_number_for_longitude(q[&quot;ascendant&quot;])
+print(division_count, &quot;divisions;&quot;, back, &quot;contains the midpoint&quot;)
+</code></pre>
+<h2 id="5-sub-division-math-without-an-ephemeris">5. Sub-division math without an ephemeris</h2>
+<p>Everything below uses only a sidereal longitude:</p>
+<pre><code class="language-python">info = point_info(48.9167)     # e.g. 18 Cancer 55
+print(info.star, info.sub_lord, info.sub_sub_lord, &quot;pada&quot;, info.pada)
+</code></pre>
+<h2 id="6-ruling-planets">6. Ruling planets</h2>
+<pre><code class="language-python">rps = ruling_planets(chart.ascendant, chart.planet_lon[&quot;Moon&quot;], 2)  # 2 = Wednesday
+for rp in rps:
+    print(f&quot;{rp.planet:&lt;10} {rp.source}&quot;)
+</code></pre>
+<h2 id="7-significators-grah-nirdeshan">7. Significators (Grah Nirdeshan)</h2>
+<pre><code class="language-python">sig = planet_significations(chart.planet_lon, [c.longitude for c in chart.cusps])
+for planet, entries in sig.items():
+    why = []
+    if any(e.by_occupation for e in entries): why.append(&quot;occupies&quot;)
+    if any(e.by_sign_lordship for e in entries): why.append(&quot;owns&quot;)
+    if any(e.by_star_lord for e in entries): why.append(&quot;star-lord&quot;)
+    print(f&quot;{planet:8} -&gt; houses {[e.house for e in entries]} ({', '.join(why)})&quot;)
+</code></pre>
+<h2 id="8-full-precision-live">8. Full precision live</h2>
+<pre><code class="language-python">paths = download_ephemeris()
+print(&quot;Data files:&quot;, [p.name for p in paths])
+</code></pre>
+<p>After the files are present, all computations silently use the full-precision
+VSOP87 / JPL DE431 ephemeris.</p>
+<h2 id="9-birth-time-rectification">9. Birth-time rectification</h2>
+<p>Only the approximate birth time is known. Dated life events are mapped to the
+KP houses they fell into, and the scanner finds the most probable minute:</p>
+<pre><code class="language-python">from kpastro import BirthInfo, LifeEvent, IdentityInfo, rectify, render_rectification
+
+birth = BirthInfo(
+    date(1990, 1, 15), time(14, 30),   # approximate time
+    28.6139, 77.2090, 5.5, &quot;New Delhi&quot;,
+)
+
+events = [
+    LifeEvent(date(1995, 9, 3),  2, (), &quot;School admission&quot;),
+    LifeEvent(date(2007, 4, 1),  4, (), &quot;Joined college&quot;),
+    LifeEvent(date(2013, 2, 14), 4, (), &quot;First job&quot;),
+    LifeEvent(date(2018, 1, 20), 7, (), &quot;Marriage&quot;),
+]
+
+result = rectify(birth, time(14, 30), events,
+                 window_min=60, step_min=1,
+                 use_rp=True,
+                 identity=IdentityInfo(siblings=1),
+                 analysis_time=datetime(2026, 1, 1, 12, 0))
+
+print(render_rectification(result, birth))
+
+# Typed access instead of the text report:
+best = result.best
+print(f&quot;Best birth time: {best.lsl} total={best.total:.2f} strikes={best.strikes}&quot;)
+ci = result.credible
+# credible._ut fields are UTC datetimes; convert to local (IST here) for display
+tz = timedelta(hours=birth.tz_hours)
+print(f&quot;Credible range: {(ci.start_ut + tz):%H:%M} - {(ci.end_ut + tz):%H:%M} &quot;
+      f&quot;local ({ci.mass:.0%} mass)&quot;)
+# every ranked candidate, in order
+for c in result.candidates[:5]:
+    print(f&quot;{c.offset_minutes:+5.0f} min  {c.lsl:&lt;8} total={c.total:.2f}&quot;)
+</code></pre>
+<p><code>events</code> need only be dated and judged to a primary house (1–12) plus optional
+secondary houses. Add <code>transit_confirmation</code> for the Jupiter/Saturn
+cross-check:</p>
+<pre><code class="language-python">conf = transit_confirmation(best.jd_ut, birth.latitude, birth.longitude,
+                            events, tz_hours=birth.tz_hours)
+print(f&quot;Jupiter/Saturn transit confirmations: {conf.matched}/{conf.total}&quot;)
+</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
