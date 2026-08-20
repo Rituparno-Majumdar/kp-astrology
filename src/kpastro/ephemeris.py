@@ -38,6 +38,9 @@ AYANAMSA_MODES: dict[str, int] = {
 
 NODES: dict[str, int] = {"mean": swe.MEAN_NODE, "true": swe.TRUE_NODE}
 
+#: Sidereal mode last applied to the (process-global) Swiss Ephemeris engine.
+_applied_sid_mode: int | None = None
+
 #: Swiss Ephemeris body ids keyed by canonical KP planet name.
 SWE_BODY: dict[str, int] = {
     "Sun": swe.SUN,
@@ -108,20 +111,20 @@ class SwissEphemeris:
         if self.ephe_path.exists():
             swe.set_ephe_path(str(self.ephe_path))
 
-        # Import-time probing never mutates the engine's sidereal mode.
-        self._last_sid_mode: int | None = None
         self._set_sid_mode()
 
     # -- engine plumbing --------------------------------------------------
 
     def _set_sid_mode(self) -> None:
+        global _applied_sid_mode
         # The Swiss Ephemeris holds process-global sidereal state; apply it
         # once and only re-apply when the mode actually changes so tight
-        # multi-chart loops make zero redundant C calls.
+        # multi-chart loops make zero redundant C calls. The tracker is
+        # module-global because instances share the engine's global state.
         mode = AYANAMSA_MODES[self.ayanamsa_mode]
-        if mode != self._last_sid_mode:
+        if mode != _applied_sid_mode:
             swe.set_sid_mode(mode)
-            self._last_sid_mode = mode
+            _applied_sid_mode = mode
 
     @property
     def data_files_present(self) -> bool:
