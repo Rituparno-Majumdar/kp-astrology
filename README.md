@@ -42,7 +42,38 @@ pip install -e .[dev]
 
 `pyswisseph` is the only runtime dependency. On very new CPython releases a source build may be needed; ensure a C compiler is available (or install a pre-built wheel) if the binary wheel is not yet published.
 
+## Why choose kpastro?
+
+| Feature | kpastro | Generalist Libraries | API-only Tools |
+| :--- | :--- | :--- | :--- |
+| **KP Specialization** | **High (249-Division)** | Low/None | Variable |
+| **Precision** | **Arc-second (Swiss Ephemeris)** | Variable | High |
+| **Deployment** | **Offline-first (No API)** | Varies | Requires Internet |
+| **Integrability** | **Designed as an engine** | Complex/Bloated | Locked to Cloud |
+
+`kpastro` is built as an **offline-first computational engine**. It is designed for developers who need high-precision, sub-second KP system calculations (star-lord, sub-lord, sub-sub-lord) without the overhead of cloud APIs or the bloat of general-purpose astrological frameworks.
+
+---
+
+## Integrating kpastro into your project
+
+`kpastro` is designed to be easily embeddable. If you are building a larger astrological system and need high-precision KP-system subdivision math (star-lord, sub-lord, sub-sub-lord) without reinventing the wheel, simply import the engine:
+
+```python
+from kpastro.vedic import point_info
+
+# Pass any sidereal longitude (0-360°) to get the full KP breakdown
+data = point_info(150.5) 
+print(f\"Sub-lord: {data.sub_lord}\")
+print(f\"Sub-sub-lord: {data.sub_sub_lord}\")
+```
+
+This makes `kpastro` an ideal **high-precision subsystem** for larger libraries.
+
+---
+
 ## Quick start (CLI)
+
 
 ```bash
 # Complete KP birth chart (New Delhi)
@@ -93,22 +124,35 @@ houses can recover it:
 from datetime import date, time
 from kpastro import BirthInfo, LifeEvent, rectify, render_rectification
 
+# Birth info approximate time
 birth = BirthInfo(date(1990, 1, 15), time(14, 30),
-                  28.6139, 77.2090, 5.5, "New Delhi")  # time is approximate
+                  28.6139, 77.2090, 5.5, 'New Delhi')
 events = [
-    LifeEvent(date(1995, 9, 3),  2, (), "School admission"),
-    LifeEvent(date(2007, 4, 1),  4, (), "Joined college"),
-    LifeEvent(date(2013, 2, 14), 4, (), "First job"),
-    LifeEvent(date(2018, 1, 20), 7, (), "Marriage"),
+    LifeEvent(date(1995, 9, 3),  2, (), 'School admission'),
+    LifeEvent(date(2007, 4, 1),  4, (), 'Joined college'),
+    LifeEvent(date(2013, 2, 14), 4, (), 'First job'),
+    LifeEvent(date(2018, 1, 20), 7, (), 'Marriage'),
 ]
-result = rectify(birth, time(14, 30), events)   # scans +/-60 min at 1-min steps
+# Scans +/-60 min at 1-min steps
+result = rectify(birth, time(14, 30), events)
 print(render_rectification(result, birth))
 ```
 
-`result.best` is the top-scoring birth time, `result.credible` a shortest
-contiguous posterior band holding 75% of the softmax mass over the scanned
-grid (a descriptive band, not a statistical credible interval), and
-`result.candidates` the full ranked scan.
+---
+
+## Citation
+
+If you use `kpastro` in your research or application, please cite us:
+
+```bibtex
+@software{majumdar2026kpastro,
+  author = {Rituparno Majumdar},
+  title = {kpastro: A Precise Krishnamurti Paddhati (KP) Astrology Engine},
+  year = {2026},
+  url = {https://github.com/Rituparno-Majumdar/kp-astrology},
+  license = {MIT}
+}
+```
 
 ## The mathematics
 

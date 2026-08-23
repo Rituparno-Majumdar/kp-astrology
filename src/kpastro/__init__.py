@@ -60,7 +60,7 @@ from .vedic import format_longitude, point_info, sub_info, sub_sub_info  # noqa:
 
 from importlib.metadata import PackageNotFoundError, version
 
-__version__ = "0.3.0"
+__version__ = "0.3.1"
 try:
     __version__ = version("kpastro")
 except PackageNotFoundError:
