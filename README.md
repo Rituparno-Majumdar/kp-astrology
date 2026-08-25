@@ -1,4 +1,4 @@
-# kpastro
+# kpastro — KP Astrology (Krishnamurti Paddhati) Engine for Python
 
 A precise Krishnamurti Paddhati (KP) Vedic astrology engine in pure Python, powered by the Swiss Ephemeris for arc-second accuracy.
 

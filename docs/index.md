@@ -1,14 +1,12 @@
+---
+description: A precise Krishnamurti Paddhati (KP) Vedic astrology engine in pure Python, powered by the Swiss Ephemeris for arc-second accuracy. Compare kpastro with generalist libraries and API-only tools.
+---
+
 # kpastro
 
-**kpastro** is a precise **Krishnamurti Paddhati (KP)** Vedic astrology engine
-written in pure Python, powered by the [Swiss Ephemeris](https://www.astro.com/swisseph/)
-for arc-second accuracy. It is available both as a typed Python library and as a
-`kpastro` command-line tool.
+**kpastro** is a precise Krishnamurti Paddhati (KP) Vedic astrology engine in pure Python, powered by the Swiss Ephemeris for arc-second accuracy. It is available both as a typed Python library and as a `kpastro` command-line tool.
 
-KP (Prof. K. S. Krishnamurti) refines the 27 nakshatras into **sub-lord** and
-**sub-sub-lord** divisions, so every point of a chart carries a precise ruling
-chain — *star-lord → sub-lord → sub-sub-lord* — used for dasha timing, event
-judgement (significators) and prashna (horary).
+KP (Prof. K. S. Krishnamurti) refines the 27 nakshatras into **sub-lord** and **sub-sub-lord** divisions, so every point of a chart carries a precise ruling chain — *star-lord → sub-lord → sub-sub-lord* — used for dasha timing, event judgement (significators) and prashna (horary).
 
 ```python
 from datetime import date, time
@@ -24,19 +22,25 @@ print(render_chart(chart))
 
 ## Feature overview
 
-| Area | What you get |
-|------|--------------|
-| Positions | All 9 KP planets (7 grahas + Rahu/Ketu) in the sidereal zodiac with daily speed & retrograde flags |
-| Ayanamsa | `lahiri` (Chitrapaksha, KP default), `kp` (modern VP291) and `kp_old` (Krishnamurti's table) |
-| Subdivision | Star-lord / sub-lord / sub-sub-lord chains and padas for any longitude |
-| Houses | Placidus cusps in the sidereal zodiac, Ascendant/MC/ARMC, planet-to-house placement |
-| Dasha | Vimshottari mahadasha/antardasha/pratyantar-dasha with nested birth balances |
-| Significators | Grah (planet→house) and Bhaav (house→planet) Nirdeshan with 4-tier strength, cusp sub-lords |
-| Ruling planets | Day-lord + Ascendant/Moon sign/star/sub lords |
-| Horary | The complete 1–249 KP division system with division-midpoint ascendants |
-| Rectification | Recover an approximate birth time from dated life events: lagna sub-lord + dasha scoring, credible-interval range, Jupiter/Saturn transit cross-check |
-| Precision | Full JPL/VSOP87 Swiss Ephemeris when data files are installed; silent Moshier fallback otherwise |
-| Interfaces | Typed Python API, `python -m kpastro`, and a `kpastro` console script |
+| Area | kpastro | Generalist Libraries | API-only Tools |
+|------|---------|----------------------|----------------|
+| **KP Specialization** | **High (249-Division)** | Low/None | Variable |
+| **Precision** | **Arc-second (Swiss Ephemeris)** | Variable | High |
+| **Deployment** | **Offline-first (No API)** | Varies | Requires Internet |
+| **Integrability** | **Designed as an engine** | Complex/Bloated | Locked to Cloud |
+
+## Feature comparison: kpastro vs alternatives
+
+| Capability | kpastro | vedicastro | ndastro-engine | OpAstro | kpastro.ai |
+|------------|---------|------------|----------------|---------|------------|
+| **249-sub division** | ✅ Full | ⚠️ Basic | ⚠️ Basic | ❌ None | ✅ Full |
+| **Ayanamsa modes** | Lahiri, KP (VP291), KP-old | Lahiri only | Lahiri only | Lahiri only | Varies |
+| **Swiss Ephemeris** | ✅ Full (optional download) | ✅ Full | ✅ Full | ✅ Full | Variable |
+| **Vimshottari dasha** | ✅ MD/AD/PD with birth balances | ✅ 3 levels | ✅ 3 levels | ✅ 3 levels | ✅ 3 levels |
+| **Birth-time rectification** | ✅ Scoring ±60 min | ❌ Not published | ❌ Not published | ❌ Not published | ✅ AI-powered |
+| **CLI + Python API** | ✅ Both | ✅ API-only | ✅ API-only | ✅ CLI + API | ✅ API-only |
+| **Offline-first** | ✅ Yes | ⚠️ Depends | ⚠️ Depends | ❌ No | ⚠️ Depends |
+| **Pricing** | Free (MIT) | MIT | Apache-2.0 | Open-core | Varies |
 
 ## Installation
 
@@ -55,5 +59,5 @@ download the full-precision ephemeris files.
 - **[Examples](examples.md)** — real Python API usage, including birth-time rectification
 - **[API reference](api-reference.md)** — every public function, class and constant
 - **[Mathematics](mathematics.md)** — the KP conventions implemented, with formulas
-- **[Development](development.md)** — setting up, testing, releasing
+- **[Development](development.md)** — setting up, tests, releasing
 - **[FAQ](faq.md)** — common questions and troubleshooting

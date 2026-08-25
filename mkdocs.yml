@@ -1,5 +1,6 @@
 site_name: kpastro
 site_url: https://rituparno-majumdar.github.io/kp-astrology/
+site_description: A precise Krishnamurti Paddhati (KP) Vedic astrology engine in pure Python, powered by the Swiss Ephemeris for arc-second accuracy.
 repo_url: https://github.com/Rituparno-Majumdar/kp-astrology
 repo_name: kp-astrology
 theme:
@@ -10,6 +11,15 @@ theme:
   features:
     - navigation.sections
     - navigation.top
+    - content.action.edit
+markdown_extensions:
+  - tables
+  - fenced_code
+  - admonition
+  - pymdownx.superfences
+plugins:
+  - search
+  - meta
 nav:
   - Home: index.md
   - Installation: installation.md
@@ -19,7 +29,3 @@ nav:
   - Mathematics: mathematics.md
   - Development: development.md
   - FAQ: faq.md
-markdown_extensions:
-  - tables
-  - fenced_code
-  - admonition
