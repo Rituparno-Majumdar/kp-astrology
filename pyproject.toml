@@ -47,6 +47,7 @@ docs = [
 
 [project.scripts]
 kpastro = "kpastro.cli:main"
+kpastro-btr = "kpastro.cli_btr:main"
 
 [project.urls]
 Homepage = "https://github.com/Rituparno-Majumdar/kp-astrology"

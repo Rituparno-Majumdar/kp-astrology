@@ -8,6 +8,7 @@ dasha                Vimshottari dasha timeline only
 rulings              ruling planets for a moment
 ayanamsa             ayanamsa value for a date
 download-ephemeris   fetch Swiss Ephemeris data files for full precision
+btr                  birth-time rectification from dated life events
 """
 
 from __future__ import annotations
@@ -215,6 +216,11 @@ def build_parser() -> argparse.ArgumentParser:
     sp = sub.add_parser("download-ephemeris", help="download Swiss Ephemeris data files")
     sp.add_argument("--dir", default=None, help="target directory (default ~/.kpastro/ephe)")
     sp.set_defaults(func=cmd_download)
+
+    sp = sub.add_parser("btr", help="birth-time rectification from dated life events")
+    from .cli_btr import add_btr_arguments, run_btr
+    add_btr_arguments(sp)
+    sp.set_defaults(func=run_btr)
     return p
 
 

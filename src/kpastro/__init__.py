@@ -11,6 +11,14 @@ Highlights
 * Birth-time rectification from dated life events, with posterior bands.
 """
 
+from importlib.metadata import PackageNotFoundError, version
+
+__version__ = "0.3.1"
+try:
+    __version__ = version("kpastro")
+except PackageNotFoundError:
+    pass
+
 from . import vedic  # noqa: F401
 from .dasha import (  # noqa: F401
     Balance,
@@ -50,6 +58,7 @@ from .rectification import (  # noqa: F401
     score_candidate,
     transit_confirmation,
 )
+from .cli_btr import load_events_json  # noqa: F401
 from .significators import (  # noqa: F401
     RulingPlanet,
     house_significations,
@@ -57,14 +66,6 @@ from .significators import (  # noqa: F401
     ruling_planets,
 )
 from .vedic import format_longitude, point_info, sub_info, sub_sub_info  # noqa: F401
-
-from importlib.metadata import PackageNotFoundError, version
-
-__version__ = "0.3.1"
-try:
-    __version__ = version("kpastro")
-except PackageNotFoundError:
-    pass
 
 __all__ = [
     "Balance",
@@ -96,6 +97,7 @@ __all__ = [
     "house_significator_sets",
     "kp_divisions",
     "kp_number_for_longitude",
+    "load_events_json",
     "mahadasha_timeline",
     "planet_significations",
     "point_info",

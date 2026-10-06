@@ -89,9 +89,13 @@ python -m kpastro ayanamsa --date 2026-08-20
 
 # Download the Swiss Ephemeris data files for full precision
 python -m kpastro download-ephemeris
+
+# Birth-time rectification (BTR) from a JSON file of life events
+kpastro-btr events.json --date 1990-01-15 --time 14:30 --tz 5.5 \
+    --lat 28.6139 --lon 77.2090 --place "New Delhi" --window 30
 ```
 
-Other subcommands: `dasha`, `rulings`. Run `python -m kpastro --help` for all options.
+Other subcommands: `dasha`, `rulings`, `btr`. Run `python -m kpastro --help` or `kpastro-btr --help` for all options.
 
 ## Python API
 
