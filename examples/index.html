@@ -1,0 +1,983 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A precise Krishnamurti Paddhati (KP) Vedic astrology engine in pure Python, powered by the Swiss Ephemeris for arc-second accuracy.">
+      
+      
+      
+        <link rel="canonical" href="https://rituparno-majumdar.github.io/kp-astrology/examples/">
+      
+      
+        <link rel="prev" href="../user-guide/">
+      
+      
+        <link rel="next" href="../api-reference/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Examples - kpastro</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#examples-python-api" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="kpastro" class="md-header__button md-logo" aria-label="kpastro" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            kpastro
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Examples
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Rituparno-Majumdar/kp-astrology" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kp-astrology
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="kpastro" class="md-nav__button md-logo" aria-label="kpastro" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    kpastro
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Rituparno-Majumdar/kp-astrology" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kp-astrology
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-a-complete-birth-chart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. A complete birth chart
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. A complete birth chart">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#typed-access-to-every-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Typed access to every layer
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-reuse-one-engine-across-many-charts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Reuse one engine across many charts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-vimshottari-dasha" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Vimshottari dasha
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-kp-horary-prashna" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. KP horary (prashna)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-sub-division-math-without-an-ephemeris" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Sub-division math without an ephemeris
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-ruling-planets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Ruling planets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-significators-grah-nirdeshan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Significators (Grah Nirdeshan)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-full-precision-live" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Full precision live
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-birth-time-rectification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Birth-time rectification
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mathematics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mathematics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../faq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-a-complete-birth-chart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. A complete birth chart
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. A complete birth chart">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#typed-access-to-every-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Typed access to every layer
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-reuse-one-engine-across-many-charts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Reuse one engine across many charts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-vimshottari-dasha" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Vimshottari dasha
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-kp-horary-prashna" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. KP horary (prashna)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-sub-division-math-without-an-ephemeris" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Sub-division math without an ephemeris
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-ruling-planets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Ruling planets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-significators-grah-nirdeshan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Significators (Grah Nirdeshan)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-full-precision-live" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Full precision live
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-birth-time-rectification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Birth-time rectification
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/Rituparno-Majumdar/kp-astrology/edit/master/docs/examples.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="examples-python-api">Examples — Python API</h1>
+<p>All examples below assume:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">date</span><span class="p">,</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">kpastro</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BirthInfo</span><span class="p">,</span> <span class="n">compute_chart</span><span class="p">,</span> <span class="n">render_chart</span><span class="p">,</span>
+    <span class="n">kp_divisions</span><span class="p">,</span> <span class="n">ascendant_from_kp_number</span><span class="p">,</span> <span class="n">kp_number_for_longitude</span><span class="p">,</span>
+    <span class="n">dasha_balance</span><span class="p">,</span> <span class="n">current_periods</span><span class="p">,</span> <span class="n">planet_significations</span><span class="p">,</span>
+    <span class="n">house_significations</span><span class="p">,</span> <span class="n">ruling_planets</span><span class="p">,</span> <span class="n">point_info</span><span class="p">,</span>
+    <span class="n">LifeEvent</span><span class="p">,</span> <span class="n">IdentityInfo</span><span class="p">,</span> <span class="n">rectify</span><span class="p">,</span> <span class="n">render_rectification</span><span class="p">,</span>
+    <span class="n">transit_confirmation</span><span class="p">,</span>
+    <span class="n">download_ephemeris</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+<h2 id="1-a-complete-birth-chart">1. A complete birth chart</h2>
+<div class="highlight"><pre><span></span><code><span class="n">birth</span> <span class="o">=</span> <span class="n">BirthInfo</span><span class="p">(</span>
+    <span class="n">date</span><span class="o">=</span><span class="n">date</span><span class="p">(</span><span class="mi">1990</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span> <span class="n">time</span><span class="o">=</span><span class="n">time</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span>
+    <span class="n">latitude</span><span class="o">=</span><span class="mf">28.6139</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="mf">77.2090</span><span class="p">,</span>
+    <span class="n">tz_hours</span><span class="o">=</span><span class="mf">5.5</span><span class="p">,</span> <span class="n">place</span><span class="o">=</span><span class="s2">"New Delhi"</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">chart</span> <span class="o">=</span> <span class="n">compute_chart</span><span class="p">(</span><span class="n">birth</span><span class="p">,</span> <span class="n">ayanamsa</span><span class="o">=</span><span class="s2">"lahiri"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">render_chart</span><span class="p">(</span><span class="n">chart</span><span class="p">))</span>
+</code></pre></div>
+<p><code>chart</code> is a <code>Chart</code> — you can ignore the text rendering and use the data
+directly:</p>
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">chart</span><span class="o">.</span><span class="n">planets</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="si">:</span><span class="s2">8</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">p</span><span class="o">.</span><span class="n">sign</span><span class="si">:</span><span class="s2">10</span><span class="si">}</span><span class="s2"> star </span><span class="si">{</span><span class="n">p</span><span class="o">.</span><span class="n">star</span><span class="si">:</span><span class="s2">16</span><span class="si">}</span><span class="s2"> sub </span><span class="si">{</span><span class="n">p</span><span class="o">.</span><span class="n">sub_lord</span><span class="si">:</span><span class="s2">8</span><span class="si">}</span><span class="s2"> "</span>
+          <span class="sa">f</span><span class="s2">"house </span><span class="si">{</span><span class="n">p</span><span class="o">.</span><span class="n">house</span><span class="si">:</span><span class="s2">2</span><span class="si">}</span><span class="s2"> retro </span><span class="si">{</span><span class="s1">'R'</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">p</span><span class="o">.</span><span class="n">retrograde</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">'.'</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Cusp 1 sub-lord:"</span><span class="p">,</span> <span class="n">chart</span><span class="o">.</span><span class="n">cusp_sublords</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Ascendant:"</span><span class="p">,</span> <span class="n">chart</span><span class="o">.</span><span class="n">ascendant</span><span class="p">,</span> <span class="s2">"deg"</span><span class="p">,</span> <span class="s2">"| MC:"</span><span class="p">,</span> <span class="n">chart</span><span class="o">.</span><span class="n">midheaven</span><span class="p">,</span> <span class="s2">"deg"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"At birth:"</span><span class="p">,</span>
+      <span class="n">chart</span><span class="o">.</span><span class="n">current</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lord</span><span class="p">,</span> <span class="s2">"/"</span><span class="p">,</span> <span class="n">chart</span><span class="o">.</span><span class="n">current</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">lord</span><span class="p">,</span> <span class="s2">"/"</span><span class="p">,</span> <span class="n">chart</span><span class="o">.</span><span class="n">current</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">lord</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="typed-access-to-every-layer">Typed access to every layer</h3>
+<div class="highlight"><pre><span></span><code><span class="n">balance</span> <span class="o">=</span> <span class="n">chart</span><span class="o">.</span><span class="n">balance</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Maha-dasha: </span><span class="si">{</span><span class="n">balance</span><span class="o">.</span><span class="n">mahadasha_lord</span><span class="si">}</span><span class="s2"> "</span>
+      <span class="sa">f</span><span class="s2">"(</span><span class="si">{</span><span class="n">balance</span><span class="o">.</span><span class="n">mahadasha_years</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> y / </span><span class="si">{</span><span class="n">balance</span><span class="o">.</span><span class="n">mahadasha_days</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> d) "</span>
+      <span class="sa">f</span><span class="s2">"in </span><span class="si">{</span><span class="n">balance</span><span class="o">.</span><span class="n">nakshatra</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">house</span><span class="p">,</span> <span class="n">tiers</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">chart</span><span class="o">.</span><span class="n">house_significators</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">sig</span> <span class="o">=</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">pl</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">)"</span> <span class="k">for</span> <span class="n">pl</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tiers</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">"—"</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"H</span><span class="si">{</span><span class="n">house</span><span class="si">:</span><span class="s2">&gt;2</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">sig</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="2-reuse-one-engine-across-many-charts">2. Reuse one engine across many charts</h2>
+<p>The Swiss Ephemeris holds process-global state, so constructing one
+<code>SwissEphemeris</code> and passing it in is both faster and cleaner:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">kpastro</span><span class="w"> </span><span class="kn">import</span> <span class="n">SwissEphemeris</span>
+
+<span class="n">eph</span> <span class="o">=</span> <span class="n">SwissEphemeris</span><span class="p">(</span><span class="n">ayanamsa</span><span class="o">=</span><span class="s2">"lahiri"</span><span class="p">,</span> <span class="n">node</span><span class="o">=</span><span class="s2">"mean"</span><span class="p">)</span>
+
+<span class="n">charts</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">compute_chart</span><span class="p">(</span><span class="n">BirthInfo</span><span class="p">(</span><span class="n">date</span><span class="p">(</span><span class="mi">1990</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">15</span><span class="p">),</span> <span class="n">time</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span><span class="mi">30</span><span class="p">),</span> <span class="mf">28.6139</span><span class="p">,</span> <span class="mf">77.2090</span><span class="p">,</span> <span class="mf">5.5</span><span class="p">,</span> <span class="s2">"New Delhi"</span><span class="p">),</span> <span class="n">eph</span><span class="o">=</span><span class="n">eph</span><span class="p">),</span>
+    <span class="n">compute_chart</span><span class="p">(</span><span class="n">BirthInfo</span><span class="p">(</span><span class="n">date</span><span class="p">(</span><span class="mi">1988</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">9</span><span class="p">),</span> <span class="n">time</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">15</span><span class="p">),</span> <span class="mf">19.0760</span><span class="p">,</span> <span class="mf">72.8777</span><span class="p">,</span> <span class="mf">5.5</span><span class="p">,</span> <span class="s2">"Mumbai"</span><span class="p">),</span> <span class="n">eph</span><span class="o">=</span><span class="n">eph</span><span class="p">),</span>
+<span class="p">]</span>
+</code></pre></div>
+<h2 id="3-vimshottari-dasha">3. Vimshottari dasha</h2>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+
+<span class="n">moon</span> <span class="o">=</span> <span class="n">compute_chart</span><span class="p">(</span><span class="n">birth</span><span class="p">)</span><span class="o">.</span><span class="n">planet_lon</span><span class="p">[</span><span class="s2">"Moon"</span><span class="p">]</span>
+
+<span class="n">bal</span> <span class="o">=</span> <span class="n">dasha_balance</span><span class="p">(</span><span class="n">moon</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">bal</span><span class="o">.</span><span class="n">mahadasha_lord</span><span class="si">}</span><span class="s2">: MD </span><span class="si">{</span><span class="n">bal</span><span class="o">.</span><span class="n">mahadasha_days</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">d "</span>
+      <span class="sa">f</span><span class="s2">"| AD </span><span class="si">{</span><span class="n">bal</span><span class="o">.</span><span class="n">active_ad_lord</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">bal</span><span class="o">.</span><span class="n">active_ad_days</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">d "</span>
+      <span class="sa">f</span><span class="s2">"| PD </span><span class="si">{</span><span class="n">bal</span><span class="o">.</span><span class="n">active_pd_lord</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">bal</span><span class="o">.</span><span class="n">active_pd_days</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">d"</span><span class="p">)</span>
+
+<span class="n">epoch</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">1990</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mf">5.5</span><span class="p">)</span>
+<span class="n">active</span> <span class="o">=</span> <span class="n">current_periods</span><span class="p">(</span><span class="n">moon</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2026</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"On 2026-01-01: MD </span><span class="si">{</span><span class="n">active</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lord</span><span class="si">}</span><span class="s2">, AD </span><span class="si">{</span><span class="n">active</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">lord</span><span class="si">}</span><span class="s2">, PD </span><span class="si">{</span><span class="n">active</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">lord</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="4-kp-horary-prashna">4. KP horary (prashna)</h2>
+<div class="highlight"><pre><span></span><code><span class="n">q</span> <span class="o">=</span> <span class="n">ascendant_from_kp_number</span><span class="p">(</span><span class="mi">45</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Number </span><span class="si">{</span><span class="n">q</span><span class="p">[</span><span class="s1">'number'</span><span class="p">]</span><span class="si">}</span><span class="s2">: asc </span><span class="si">{</span><span class="n">q</span><span class="p">[</span><span class="s1">'ascendant'</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> deg </span><span class="si">{</span><span class="n">q</span><span class="p">[</span><span class="s1">'sign'</span><span class="p">]</span><span class="si">}</span><span class="s2"> "</span>
+      <span class="sa">f</span><span class="s2">"star </span><span class="si">{</span><span class="n">q</span><span class="p">[</span><span class="s1">'star'</span><span class="p">]</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">q</span><span class="p">[</span><span class="s1">'star_lord'</span><span class="p">]</span><span class="si">}</span><span class="s2">), sub </span><span class="si">{</span><span class="n">q</span><span class="p">[</span><span class="s1">'sub_lord'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="n">division_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">kp_divisions</span><span class="p">())</span>      <span class="c1"># exactly 249</span>
+<span class="n">back</span> <span class="o">=</span> <span class="n">kp_number_for_longitude</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="s2">"ascendant"</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">division_count</span><span class="p">,</span> <span class="s2">"divisions;"</span><span class="p">,</span> <span class="n">back</span><span class="p">,</span> <span class="s2">"contains the midpoint"</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="5-sub-division-math-without-an-ephemeris">5. Sub-division math without an ephemeris</h2>
+<p>Everything below uses only a sidereal longitude:</p>
+<div class="highlight"><pre><span></span><code><span class="n">info</span> <span class="o">=</span> <span class="n">point_info</span><span class="p">(</span><span class="mf">48.9167</span><span class="p">)</span>     <span class="c1"># e.g. 18 Cancer 55</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">info</span><span class="o">.</span><span class="n">star</span><span class="p">,</span> <span class="n">info</span><span class="o">.</span><span class="n">sub_lord</span><span class="p">,</span> <span class="n">info</span><span class="o">.</span><span class="n">sub_sub_lord</span><span class="p">,</span> <span class="s2">"pada"</span><span class="p">,</span> <span class="n">info</span><span class="o">.</span><span class="n">pada</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="6-ruling-planets">6. Ruling planets</h2>
+<div class="highlight"><pre><span></span><code><span class="n">rps</span> <span class="o">=</span> <span class="n">ruling_planets</span><span class="p">(</span><span class="n">chart</span><span class="o">.</span><span class="n">ascendant</span><span class="p">,</span> <span class="n">chart</span><span class="o">.</span><span class="n">planet_lon</span><span class="p">[</span><span class="s2">"Moon"</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># 2 = Wednesday</span>
+<span class="k">for</span> <span class="n">rp</span> <span class="ow">in</span> <span class="n">rps</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">rp</span><span class="o">.</span><span class="n">planet</span><span class="si">:</span><span class="s2">&lt;10</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">rp</span><span class="o">.</span><span class="n">source</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="7-significators-grah-nirdeshan">7. Significators (Grah Nirdeshan)</h2>
+<div class="highlight"><pre><span></span><code><span class="n">sig</span> <span class="o">=</span> <span class="n">planet_significations</span><span class="p">(</span><span class="n">chart</span><span class="o">.</span><span class="n">planet_lon</span><span class="p">,</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">longitude</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">chart</span><span class="o">.</span><span class="n">cusps</span><span class="p">])</span>
+<span class="k">for</span> <span class="n">planet</span><span class="p">,</span> <span class="n">entries</span> <span class="ow">in</span> <span class="n">sig</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">why</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">by_occupation</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">entries</span><span class="p">):</span> <span class="n">why</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"occupies"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">by_sign_lordship</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">entries</span><span class="p">):</span> <span class="n">why</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"owns"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">by_star_lord</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">entries</span><span class="p">):</span> <span class="n">why</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"star-lord"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">planet</span><span class="si">:</span><span class="s2">8</span><span class="si">}</span><span class="s2"> -&gt; houses </span><span class="si">{</span><span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="n">house</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">entries</span><span class="p">]</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">why</span><span class="p">)</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="8-full-precision-live">8. Full precision live</h2>
+<div class="highlight"><pre><span></span><code><span class="n">paths</span> <span class="o">=</span> <span class="n">download_ephemeris</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Data files:"</span><span class="p">,</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">])</span>
+</code></pre></div>
+<p>After the files are present, all computations silently use the full-precision
+VSOP87 / JPL DE431 ephemeris.</p>
+<h2 id="9-birth-time-rectification">9. Birth-time rectification</h2>
+<p>Only the approximate birth time is known. Dated life events are mapped to the
+KP houses they fell into, and the scanner finds the most probable minute:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">kpastro</span><span class="w"> </span><span class="kn">import</span> <span class="n">BirthInfo</span><span class="p">,</span> <span class="n">LifeEvent</span><span class="p">,</span> <span class="n">IdentityInfo</span><span class="p">,</span> <span class="n">rectify</span><span class="p">,</span> <span class="n">render_rectification</span>
+
+<span class="n">birth</span> <span class="o">=</span> <span class="n">BirthInfo</span><span class="p">(</span>
+    <span class="n">date</span><span class="p">(</span><span class="mi">1990</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span> <span class="n">time</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span>   <span class="c1"># approximate time</span>
+    <span class="mf">28.6139</span><span class="p">,</span> <span class="mf">77.2090</span><span class="p">,</span> <span class="mf">5.5</span><span class="p">,</span> <span class="s2">"New Delhi"</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">events</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">LifeEvent</span><span class="p">(</span><span class="n">date</span><span class="p">(</span><span class="mi">1995</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>  <span class="mi">2</span><span class="p">,</span> <span class="p">(),</span> <span class="s2">"School admission"</span><span class="p">),</span>
+    <span class="n">LifeEvent</span><span class="p">(</span><span class="n">date</span><span class="p">(</span><span class="mi">2007</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>  <span class="mi">4</span><span class="p">,</span> <span class="p">(),</span> <span class="s2">"Joined college"</span><span class="p">),</span>
+    <span class="n">LifeEvent</span><span class="p">(</span><span class="n">date</span><span class="p">(</span><span class="mi">2013</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">14</span><span class="p">),</span> <span class="mi">4</span><span class="p">,</span> <span class="p">(),</span> <span class="s2">"First job"</span><span class="p">),</span>
+    <span class="n">LifeEvent</span><span class="p">(</span><span class="n">date</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="mi">7</span><span class="p">,</span> <span class="p">(),</span> <span class="s2">"Marriage"</span><span class="p">),</span>
+<span class="p">]</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">rectify</span><span class="p">(</span><span class="n">birth</span><span class="p">,</span> <span class="n">time</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="n">events</span><span class="p">,</span>
+                 <span class="n">window_min</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">step_min</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">use_rp</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">identity</span><span class="o">=</span><span class="n">IdentityInfo</span><span class="p">(</span><span class="n">siblings</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+                 <span class="n">analysis_time</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2026</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">render_rectification</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">birth</span><span class="p">))</span>
+
+<span class="c1"># Typed access instead of the text report:</span>
+<span class="n">best</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">best</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Best birth time: </span><span class="si">{</span><span class="n">best</span><span class="o">.</span><span class="n">lsl</span><span class="si">}</span><span class="s2"> total=</span><span class="si">{</span><span class="n">best</span><span class="o">.</span><span class="n">total</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> strikes=</span><span class="si">{</span><span class="n">best</span><span class="o">.</span><span class="n">strikes</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="n">ci</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">credible</span>
+<span class="c1"># credible._ut fields are UTC datetimes; convert to local (IST here) for display</span>
+<span class="n">tz</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="n">birth</span><span class="o">.</span><span class="n">tz_hours</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Credible range: </span><span class="si">{</span><span class="p">(</span><span class="n">ci</span><span class="o">.</span><span class="n">start_ut</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">tz</span><span class="p">)</span><span class="si">:</span><span class="s2">%H:%M</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="p">(</span><span class="n">ci</span><span class="o">.</span><span class="n">end_ut</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">tz</span><span class="p">)</span><span class="si">:</span><span class="s2">%H:%M</span><span class="si">}</span><span class="s2"> "</span>
+      <span class="sa">f</span><span class="s2">"local (</span><span class="si">{</span><span class="n">ci</span><span class="o">.</span><span class="n">mass</span><span class="si">:</span><span class="s2">.0%</span><span class="si">}</span><span class="s2"> mass)"</span><span class="p">)</span>
+<span class="c1"># every ranked candidate, in order</span>
+<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">candidates</span><span class="p">[:</span><span class="mi">5</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">c</span><span class="o">.</span><span class="n">offset_minutes</span><span class="si">:</span><span class="s2">+5.0f</span><span class="si">}</span><span class="s2"> min  </span><span class="si">{</span><span class="n">c</span><span class="o">.</span><span class="n">lsl</span><span class="si">:</span><span class="s2">&lt;8</span><span class="si">}</span><span class="s2"> total=</span><span class="si">{</span><span class="n">c</span><span class="o">.</span><span class="n">total</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+<p><code>events</code> need only be dated and judged to a primary house (1–12) plus optional
+secondary houses. Add <code>transit_confirmation</code> for the Jupiter/Saturn
+cross-check:</p>
+<div class="highlight"><pre><span></span><code><span class="n">conf</span> <span class="o">=</span> <span class="n">transit_confirmation</span><span class="p">(</span><span class="n">best</span><span class="o">.</span><span class="n">jd_ut</span><span class="p">,</span> <span class="n">birth</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span> <span class="n">birth</span><span class="o">.</span><span class="n">longitude</span><span class="p">,</span>
+                            <span class="n">events</span><span class="p">,</span> <span class="n">tz_hours</span><span class="o">=</span><span class="n">birth</span><span class="o">.</span><span class="n">tz_hours</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Jupiter/Saturn transit confirmations: </span><span class="si">{</span><span class="n">conf</span><span class="o">.</span><span class="n">matched</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">conf</span><span class="o">.</span><span class="n">total</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "content.action.edit"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
