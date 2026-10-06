@@ -4,6 +4,17 @@ All notable changes to **kpastro** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.3.1] - 2026-10-06
+
+### Added
+
+- **Birth-time rectification CLI (`kpastro-btr`)** — dedicated command-line
+  interface and `btr` subcommand for birth-time rectification from a JSON file
+  of dated life events (primary house and secondary houses) over a candidate
+  birth window. Formats and prints results using `render_rectification`.
+- **Automated PyPI publishing** — GitHub Actions publication workflow on release tags
+  with OIDC Trusted Publishing and secret token support.
+
 ## [0.3.0] - 2026-08-20
 
 ### Fixed
