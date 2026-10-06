@@ -13,7 +13,7 @@ Highlights
 
 from importlib.metadata import PackageNotFoundError, version
 
-__version__ = "0.3.1"
+__version__ = "0.3.3"
 try:
     __version__ = version("kpastro")
 except PackageNotFoundError:

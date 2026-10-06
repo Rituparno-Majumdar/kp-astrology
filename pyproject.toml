@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "kpastro"
-version = "0.3.1"
+version = "0.3.3"
 description = "KP astrology Python library: Krishnamurti Paddhati engine with nakshatra/sub-lord chains, Vimshottari dasha, Placidus cusps, birth-time rectification, and KP horary (1-249). Swiss Ephemeris powered."
 readme = "README.md"
 requires-python = ">=3.9"
