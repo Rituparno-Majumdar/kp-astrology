@@ -224,8 +224,8 @@ def _star_col(star: str, star_lord: str | None) -> str:
     return f"{star:<18} {star_lord:<9} "
 
 
-def render_planets(chart: Chart, star_lord: bool = False) -> str:
-    """Planet table; ``star_lord=True`` adds a Star-Lord column after Star."""
+def render_planets(chart: Chart, star_lord: bool = True) -> str:
+    """Planet table; ``star_lord=False`` drops the Star-Lord column after Star."""
     lines = [
         f" {'Planet':<9} {'Longitude':>10} {'Sign':<12} "
         f"{_star_col('Star', 'Star-Lord' if star_lord else None)}"
@@ -243,8 +243,8 @@ def render_planets(chart: Chart, star_lord: bool = False) -> str:
     return "\n".join(lines)
 
 
-def render_cusps(chart: Chart, star_lord: bool = False) -> str:
-    """Cusp table; ``star_lord=True`` adds a Star-Lord column after Star."""
+def render_cusps(chart: Chart, star_lord: bool = True) -> str:
+    """Cusp table; ``star_lord=False`` drops the Star-Lord column after Star."""
     lines = [
         f" {'House':>5} {'Cusp':>10} {'Sign':<12} "
         f"{_star_col('Star', 'Star-Lord' if star_lord else None)}"
@@ -301,10 +301,10 @@ def _days(period: Period) -> str:
     return format_days(period.duration_days)
 
 
-def render_chart(chart: Chart, star_lord: bool = False) -> str:
+def render_chart(chart: Chart, star_lord: bool = True) -> str:
     """Human-readable representation of the full KP chart.
 
-    ``star_lord=True`` adds a Star-Lord column to the planet and cusp tables.
+    ``star_lord=False`` drops the Star-Lord column from the planet and cusp tables.
     """
     birth = chart.birth
     out = []

@@ -62,10 +62,10 @@ class TestRenderChart:
         assert "VIMSHOTTARI DASHA" in out
         assert "RULING PLANETS" in out
 
-    def test_star_lord_column_is_opt_in(self):
+    def test_star_lord_column_is_on_by_default(self):
         chart = compute_chart(DELHI)
-        assert "Star-Lord" not in render_chart(chart)
-        out = render_chart(chart, star_lord=True)
+        assert "Star-Lord" not in render_chart(chart, star_lord=False)
+        out = render_chart(chart)
         assert out.count("Star-Lord") == 2  # planet and cusp table headers
         for p in chart.planets:
             row = next(l for l in out.splitlines() if l.startswith(f" {p.name:<9} "))

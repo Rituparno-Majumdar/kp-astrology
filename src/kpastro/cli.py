@@ -193,8 +193,8 @@ def build_parser() -> argparse.ArgumentParser:
             sp.add_argument("--number", type=_horary_number_arg, required=True, help=f"KP horary number 1-{MAX_HORARY_NUMBER}")
 
     def add_star_lord(sp: argparse.ArgumentParser) -> None:
-        sp.add_argument("--star-lord", action="store_true",
-                        help="add a Star-Lord column to the planet and cusp tables")
+        sp.add_argument("--star-lord", action=argparse.BooleanOptionalAction, default=True,
+                        help="show the Star-Lord column in the planet and cusp tables (default: on)")
 
     sp = sub.add_parser("natal", help="complete KP birth chart")
     add_common(sp)

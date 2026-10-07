@@ -64,11 +64,11 @@ Output sections:
 5. **Ruling planets** — day-lord and the Ascendant/Moon sign/star/sub lords.
 6. **Vimshottari dasha** — mahadasha timeline and the MD/AD/PD running at birth.
 
-Add `--star-lord` to insert a **Star-Lord** column (the Vimshottari lord of each
-nakshatra) after the Star column in the planet and cusp tables:
+The planet and cusp tables include a **Star-Lord** column (the Vimshottari lord
+of each nakshatra) after the Star column. Pass `--no-star-lord` to hide it:
 
 ```bash
-kpastro natal --star-lord \
+kpastro natal --no-star-lord \
     --date 1990-01-15 --time 14:30 --tz 5.5 \
     --lat 28.6139 --lon 77.2090 --place "New Delhi"
 ```
@@ -84,7 +84,7 @@ kpastro horary --number 45 \
     --lat 28.61 --lon 77.20
 ```
 
-`--number` must be an integer **1–249**. `--star-lord` works here too, as for
+`--number` must be an integer **1–249**. `--no-star-lord` works here too, as for
 `natal`.
 
 ## `kpastro dasha` — Vimshottari timeline only

@@ -8,10 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
-- **Star-Lord column** — `render_chart`, `render_planets` and `render_cusps`
-  accept `star_lord=True` to add a Star-Lord column after Star in the planet
-  and cusp tables; the `natal` and `horary` CLI subcommands expose it as
-  `--star-lord`. Default output is unchanged.
+- **Star-Lord column** — the planet and cusp tables printed by `render_chart`,
+  `render_planets` and `render_cusps` now include a Star-Lord column after
+  Star. Pass `star_lord=False` (or `--no-star-lord` on the `natal` and
+  `horary` CLI subcommands) for the previous layout.
 
 ## [0.3.3] - 2026-10-06
 

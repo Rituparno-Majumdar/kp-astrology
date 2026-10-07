@@ -234,9 +234,10 @@ house, longitude (sidereal, deg), sign, sign_lord, star, star_lord, sub_lord, su
 - `compute_chart(birth, ayanamsa="lahiri", node="mean", eph=None) -> Chart` —
   every KP layer in one call. Reuse a single `SwissEphemeris` across many charts
   via `eph=` to avoid re-registering the engine.
-- `render_chart(chart, star_lord=False) -> str` — the full multi-section text
-  chart. `star_lord=True` adds a Star-Lord column to the planet and cusp tables.
-- `render_planets(chart, star_lord=False)`, `render_cusps(chart, star_lord=False)`,
+- `render_chart(chart, star_lord=True) -> str` — the full multi-section text
+  chart. The planet and cusp tables include a Star-Lord column after Star;
+  `star_lord=False` omits it.
+- `render_planets(chart, star_lord=True)`, `render_cusps(chart, star_lord=True)`,
   `render_significators(chart)`, `render_ruling(chart)`,
   `render_dasha(chart) -> str` — individual sections.
 
