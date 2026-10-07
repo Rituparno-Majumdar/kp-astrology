@@ -4,6 +4,15 @@ All notable changes to **kpastro** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- **Star-Lord column** — the planet and cusp tables printed by `render_chart`,
+  `render_planets` and `render_cusps` now include a Star-Lord column after
+  Star. Pass `star_lord=False` (or `--no-star-lord` on the `natal` and
+  `horary` CLI subcommands) for the previous layout.
+
 ## [0.3.3] - 2026-10-06
 
 ### Added

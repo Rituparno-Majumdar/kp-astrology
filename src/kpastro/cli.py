@@ -70,7 +70,7 @@ def cmd_natal(args: argparse.Namespace) -> int:
         place=args.place,
     )
     chart = compute_chart(birth, ayanamsa=args.ayanamsa, node=args.node)
-    print(render_chart(chart))
+    print(render_chart(chart, star_lord=args.star_lord))
     return 0
 
 
@@ -97,7 +97,7 @@ def cmd_horary(args: argparse.Namespace) -> int:
     )
     print("")
     print(" Moment chart (planets & Placidus cusps for the query instant):")
-    print(render_chart(chart))
+    print(render_chart(chart, star_lord=args.star_lord))
     return 0
 
 
@@ -192,12 +192,18 @@ def build_parser() -> argparse.ArgumentParser:
         if with_number:
             sp.add_argument("--number", type=_horary_number_arg, required=True, help=f"KP horary number 1-{MAX_HORARY_NUMBER}")
 
+    def add_star_lord(sp: argparse.ArgumentParser) -> None:
+        sp.add_argument("--star-lord", action=argparse.BooleanOptionalAction, default=True,
+                        help="show the Star-Lord column in the planet and cusp tables (default: on)")
+
     sp = sub.add_parser("natal", help="complete KP birth chart")
     add_common(sp)
+    add_star_lord(sp)
     sp.set_defaults(func=cmd_natal)
 
     sp = sub.add_parser("horary", help="KP horary chart from a 1-249 number")
     add_common(sp, with_number=True)
+    add_star_lord(sp)
     sp.set_defaults(func=cmd_horary)
 
     sp = sub.add_parser("dasha", help="Vimshottari dasha timeline")
