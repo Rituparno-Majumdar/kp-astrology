@@ -51,6 +51,14 @@ class TestHappyPaths:
         assert "KRISHNAMURTI PADDHATI" in out
         assert "PLANETS" in out and "VIMSHOTTARI DASHA" in out
 
+    def test_natal_star_lord_flag_adds_column(self, capsys):
+        assert "Star-Lord" not in _run(capsys, "natal", *COMMON)
+        assert "Star-Lord" in _run(capsys, "natal", "--star-lord", *COMMON)
+
+    def test_horary_star_lord_flag_adds_column(self, capsys):
+        out = _run(capsys, "horary", "--number", "45", "--star-lord", *COMMON)
+        assert "Star-Lord" in out
+
     def test_horary_exits_zero(self, capsys):
         out = _run(capsys, "horary", "--number", "45", *COMMON)
         assert "KP number : 45" in out
