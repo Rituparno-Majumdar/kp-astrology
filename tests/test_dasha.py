@@ -21,6 +21,8 @@ from kpastro.dasha import (
 )
 
 VIMSHOTTARI_ORDER = ("Ketu", "Venus", "Sun", "Moon", "Mars", "Rahu", "Jupiter", "Saturn", "Mercury")
+YEARS = {"Ketu": 7, "Venus": 20, "Sun": 6, "Moon": 10, "Mars": 7, "Rahu": 18,
+         "Jupiter": 16, "Saturn": 19, "Mercury": 17}
 
 
 class TestDashaBalance:
@@ -127,10 +129,42 @@ class TestPratyantardashas:
         bal = dasha_balance(10.0)
         md = mahadasha_timeline(10.0)
         ads = antardashas_of(md[0], bal)
-        pds = pratyantardashas_of(ads[0], bal, md_is_partial=True)
+        pds = pratyantardashas_of(md[0], ads[0])
         assert pds[0].lord == bal.active_pd_lord == "Ketu"
         assert pds[0].duration_days == pytest.approx(bal.active_pd_days, abs=1e-6)
         assert pds[-1].end_days == pytest.approx(ads[0].end_days, abs=1e-6)
+
+    def test_lengths_include_the_mahadasha(self):
+        # Regression: a PD lasts MD x AD x PD / 120**2 years.  The Mercury PD of
+        # the Jupiter-Mercury period is 16 x 17 x 17 / 14400 years (~116.8 days),
+        # not the 17 x 17 / 120 years an AD of Mercury would last.
+        md = next(p for p in mahadasha_timeline(10.0) if p.lord == "Jupiter")
+        ad = next(a for a in antardashas_of(md) if a.lord == "Mercury")
+        pds = pratyantardashas_of(md, ad)
+        assert [p.lord for p in pds] == list(VIMSHOTTARI_ORDER[8:] + VIMSHOTTARI_ORDER[:8])
+        assert pds[0].duration_days == pytest.approx(16 * 17 * 17 / 14400 * 365.25, rel=1e-12)
+        for p in pds:
+            assert p.duration_days == pytest.approx(
+                16 * 17 * YEARS[p.lord] / 14400 * 365.25, rel=1e-12)
+        assert pds[-1].end_days == pytest.approx(ad.duration_days, abs=1e-6)
+
+    @pytest.mark.parametrize("moon", [10.0, 27.7656, 95.3, 200.5, 333.3])
+    def test_birth_pd_matches_balance(self, moon):
+        # The first PD of the birth AD is the Moon's sub-sub-lord with its
+        # balance, outside Ashwini/Magha/Mula too (where the old bug hid).
+        bal = dasha_balance(moon)
+        md = mahadasha_timeline(moon)[0]
+        ad = antardashas_of(md, bal)[0]
+        pds = pratyantardashas_of(md, ad)
+        assert pds[0].lord == bal.active_pd_lord
+        assert pds[0].duration_days == pytest.approx(bal.active_pd_days, abs=1e-6)
+        assert pds[-1].end_days == pytest.approx(ad.duration_days, abs=1e-6)
+
+    def test_birth_pd_in_krittika(self):
+        # Moon 27.7656 Aries: Krittika, Sun MD, Moon AD; 25.9' into the Moon sub
+        # the sub-subs run Moon 5.6', Mars 3.9', Rahu 10', Jupiter 8.9' -> Jupiter.
+        bal = dasha_balance(27.7656)
+        assert (bal.mahadasha_lord, bal.active_ad_lord, bal.active_pd_lord) == ("Sun", "Moon", "Jupiter")
 
 
 class TestCurrentPeriods:

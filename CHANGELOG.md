@@ -13,6 +13,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   Star. Pass `star_lord=False` (or `--no-star-lord` on the `natal` and
   `horary` CLI subcommands) for the previous layout.
 
+### Fixed
+
+- **Sub-sub-lord** — `sub_sub_info` / `sub_sub_lord` opened the sub-sub
+  sequence at the wrong lord in every nakshatra except Ashwini, Magha and
+  Mula (it used the sub's position within its star as a star index). The
+  sequence now opens at the sub's own lord. This corrects the Sub-Sub column
+  of the chart tables and the horary output, and the birth pratyantar-dasha
+  (`Balance.active_pd_lord` / `active_pd_days`).
+- **Pratyantar-dasha lengths** — `pratyantardashas_of` sized each period as
+  `AD years x PD years / 120`, leaving out the mahadasha, so `current_periods`
+  reported the wrong PD. Periods now last `MD x AD x PD / 120**2` years.
+
+### Changed
+
+- `pratyantardashas_of(ad, balance=None, md_is_partial=False)` is now
+  `pratyantardashas_of(md, ad)`: the mahadasha is needed for the period
+  lengths, and the birth balance is derived from `ad` itself.
+
 ## [0.3.3] - 2026-10-06
 
 ### Added

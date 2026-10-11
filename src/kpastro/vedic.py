@@ -267,8 +267,13 @@ def sub_sub_info(lon: float) -> SubSubInfo:
     lon = normalize_longitude(lon)
     sub = sub_info(lon)
     probe = min(lon + _BOUNDARY_TOL, sub.end_deg - 1e-12)
+    # The sequence opens at the sub's own lord.  (``sub.index`` is the sub's
+    # position within its star, not a star index, so it must not be passed to
+    # ``sub_divisions``.)
+    first = VIMSHOTTARI_ORDER.index(sub.lord)
     running = 0.0
-    for k, (lord, _start_deg, _end_deg, _span) in enumerate(sub_divisions(sub.index)):
+    for k in range(9):
+        lord = VIMSHOTTARI_ORDER[(first + k) % 9]
         span = sub.span_arcmin * VIMSHOTTARI_YEARS[lord] / VIMSHOTTARI_TOTAL_YEARS
         start_deg = sub.start_deg + running / 60.0
         end_deg = start_deg + span / 60.0

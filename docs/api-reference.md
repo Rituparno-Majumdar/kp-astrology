@@ -282,8 +282,11 @@ lord, start_days, end_days, level          # level 1=MD, 2=AD, 3=PD
 - `antardashas_of(period, balance=None) -> list[Period]` — the nine antardashas.
   For the opening (balance) mahadasha, starts at the Moon's sub-lord and the first
   AD is truncated to the AD balance.
-- `pratyantardashas_of(ad, balance=None, md_is_partial=False) -> list[Period]` —
-  the nine pratyantardashas of an antardasha (refined only for the birth AD).
+- `pratyantardashas_of(md, ad) -> list[Period]` — the pratyantardashas of
+  antardasha `ad` inside mahadasha `md`. Each lasts
+  `MD years x AD years x PD years / 120**2`; for the birth AD the part elapsed
+  before birth is cut off, so the first PD is the birth PD with its balance.
+  Offsets are days from the start of `ad`.
 - `current_periods(moon_longitude, epoch, instant, depth=3) -> dict[int, Period]` —
   active MD(1)/AD(2)/PD(3) at `instant`. Raises `ValueError` if the instant falls
   outside the timelines.

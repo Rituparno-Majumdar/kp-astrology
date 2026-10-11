@@ -206,16 +206,31 @@ def antardashas_of(period: Period, balance: Balance | None = None) -> list[Perio
     )
 
 
-def pratyantardashas_of(ad: Period, balance: Balance | None = None, md_is_partial: bool = False) -> list[Period]:
-    """Pratyantardashas inside an antardasha (refined only for the birth AD)."""
-    most_refined = balance is not None and md_is_partial and ad.start_days == 0
-    return _subperiods(
-        ad.lord,
-        ad.duration_days,
-        3,
-        start_anchor=balance.active_pd_lord if most_refined else None,
-        first_dur=balance.active_pd_days if most_refined else None,
-    )
+def pratyantardashas_of(md: Period, ad: Period) -> list[Period]:
+    """Pratyantardashas inside antardasha ``ad`` of mahadasha ``md``.
+
+    Each lasts ``MD years x AD years x PD years / 120**2`` and the sequence
+    opens at the antardasha lord.  For the antardasha running at birth (which
+    ``antardashas_of`` truncates to its balance) the full sequence is laid out
+    and the part already elapsed at birth is cut off, so the first period is
+    the birth pratyantardasha with its remaining balance.  Offsets are days
+    from the start of ``ad``.
+    """
+    full_ad = period_days(md.lord, ad.lord)
+    elapsed = full_ad - ad.duration_days
+    if elapsed < 1e-9:
+        elapsed = 0.0
+    pos = VIMSHOTTARI_INDEX[ad.lord]
+    out: list[Period] = []
+    offset = -elapsed
+    for k in range(len(VIMSHOTTARI_ORDER)):
+        lord = VIMSHOTTARI_ORDER[(pos + k) % 9]
+        end = offset + full_ad * VIMSHOTTARI_YEARS[lord] / VIMSHOTTARI_TOTAL_YEARS
+        start, stop = max(offset, 0.0), min(end, ad.duration_days)
+        if stop - start > 1e-9:
+            out.append(Period(lord, start, stop, 3))
+        offset = end
+    return out
 
 
 def _locate(periods: list[Period], offset_days: float) -> Period | None:
@@ -246,7 +261,7 @@ def current_periods(
     result[2] = ad
 
     if depth >= 3:
-        pds = pratyantardashas_of(ad, bal, md_is_partial=md.start_days == 0)
+        pds = pratyantardashas_of(md, ad)
         pd = _locate(pds, days - md.start_days - ad.start_days)
         if pd is not None:
             result[3] = pd
