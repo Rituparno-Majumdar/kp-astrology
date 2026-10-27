@@ -1,0 +1,25 @@
+# kpastro — docs
+A precise Krishnamurti Paddhati (KP) Vedic astrology engine in pure Python, powered by the Swiss Ephemeris for arc-second accuracy.
+
+This is the documentation for kpastro, a Python library for Krishnamurti Paddhati (KP) Vedic astrology calculations.
+
+## Key pages
+
+- Index: the main entry point with feature overview and quick start
+- Installation: pip install instructions and ephemeris data download
+- User guide: command-line tool usage (natal, horary, dasha, ayanamsa)
+- API reference: typed Python API (BirthInfo, compute_chart, render_chart, rectification)
+- Mathematics: the KP conventions, formulas, and sub-lord chain math
+- Development: setup, tests, releasing new versions
+- FAQ: accuracy, ayanamsa choices, 249 division derivation, birth-time rectification
+
+## AI crawling notes
+
+- This package uses `pyswisseph` (Swiss Ephemeris) as its only runtime dependency
+- Full precision requires downloading ephemeris data files via `python -m kpastro download-ephemeris`
+- The Moshier fallback provides ~1 arcsecond accuracy without data files
+- All KP subdivision math (sub-lord, sub-sub-lord chains) is pure Python, no compiled extensions
+
+## Version
+
+Current release: 0.3.1 (Aug 2026)
