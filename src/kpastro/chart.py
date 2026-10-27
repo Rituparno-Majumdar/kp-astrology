@@ -217,9 +217,18 @@ def _dms(lon: float) -> str:
     return format_longitude(lon, arcsec=False)
 
 
-def render_planets(chart: Chart) -> str:
+def _star_col(star: str, star_lord: str | None) -> str:
+    """The Star cell, followed by a Star-Lord cell when ``star_lord`` is given."""
+    if star_lord is None:
+        return f"{star:<18} "
+    return f"{star:<18} {star_lord:<9} "
+
+
+def render_planets(chart: Chart, star_lord: bool = True) -> str:
+    """Planet table; ``star_lord=False`` drops the Star-Lord column after Star."""
     lines = [
-        f" {'Planet':<9} {'Longitude':>10} {'Sign':<12} {'Star':<18} "
+        f" {'Planet':<9} {'Longitude':>10} {'Sign':<12} "
+        f"{_star_col('Star', 'Star-Lord' if star_lord else None)}"
         f"{'Sub':<9} {'Sub-Sub':<9} {'House':>5} {'R':>2}"
     ]
     lines.append("-" * len(lines[0]))
@@ -227,21 +236,26 @@ def render_planets(chart: Chart) -> str:
         abbr = PLANET_ABBR[p.name]
         lines.append(
             f" {p.name:<9} {_dms(p.sign_degree):<10} {p.sign:<12} "
-            f"{p.star:<18} {p.sub_lord:<9} {p.sub_sub_lord:<9} {p.house:>5} "
+            f"{_star_col(p.star, p.star_lord if star_lord else None)}"
+            f"{p.sub_lord:<9} {p.sub_sub_lord:<9} {p.house:>5} "
             f"{'R' if p.retrograde else '.':>2}"
         )
     return "\n".join(lines)
 
 
-def render_cusps(chart: Chart) -> str:
+def render_cusps(chart: Chart, star_lord: bool = True) -> str:
+    """Cusp table; ``star_lord=False`` drops the Star-Lord column after Star."""
     lines = [
-        f" {'House':>5} {'Cusp':>10} {'Sign':<12} {'Star':<18} {'Sub':<9} {'Sub-Sub':<9}"
+        f" {'House':>5} {'Cusp':>10} {'Sign':<12} "
+        f"{_star_col('Star', 'Star-Lord' if star_lord else None)}"
+        f"{'Sub':<9} {'Sub-Sub':<9}"
     ]
     lines.append("-" * len(lines[0]))
     for c in chart.cusps:
         lines.append(
             f" {c.house:>5} {_dms(c.longitude % 30.0):>10} {c.sign:<12} "
-            f"{c.star:<18} {c.sub_lord:<9} {c.sub_sub_lord:<9}"
+            f"{_star_col(c.star, c.star_lord if star_lord else None)}"
+            f"{c.sub_lord:<9} {c.sub_sub_lord:<9}"
         )
     return "\n".join(lines)
 
@@ -287,8 +301,11 @@ def _days(period: Period) -> str:
     return format_days(period.duration_days)
 
 
-def render_chart(chart: Chart) -> str:
-    """Human-readable representation of the full KP chart."""
+def render_chart(chart: Chart, star_lord: bool = True) -> str:
+    """Human-readable representation of the full KP chart.
+
+    ``star_lord=False`` drops the Star-Lord column from the planet and cusp tables.
+    """
     birth = chart.birth
     out = []
     out.append("=" * 72)
@@ -305,10 +322,10 @@ def render_chart(chart: Chart) -> str:
     )
     out.append("")
     out.append("PLANETS (sidereal, KP subdivision)")
-    out.append(render_planets(chart))
+    out.append(render_planets(chart, star_lord=star_lord))
     out.append("")
     out.append("HOUSE CUSPS (Placidus, sidereal)")
-    out.append(render_cusps(chart))
+    out.append(render_cusps(chart, star_lord=star_lord))
     out.append("")
     out.append("SIGNIFICATORS (Bhaav Nirdeshan)")
     out.append(render_significators(chart))

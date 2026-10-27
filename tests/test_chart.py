@@ -62,6 +62,19 @@ class TestRenderChart:
         assert "VIMSHOTTARI DASHA" in out
         assert "RULING PLANETS" in out
 
+    def test_star_lord_column_is_on_by_default(self):
+        chart = compute_chart(DELHI)
+        assert "Star-Lord" not in render_chart(chart, star_lord=False)
+        out = render_chart(chart)
+        assert out.count("Star-Lord") == 2  # planet and cusp table headers
+        for p in chart.planets:
+            row = next(l for l in out.splitlines() if l.startswith(f" {p.name:<9} "))
+            assert f" {p.star:<18} {p.star_lord:<9} " in row
+        for c in chart.cusps:
+            row = next(l for l in out.splitlines()
+                       if l.startswith(f" {c.house:>5} ") and c.star in l)
+            assert f" {c.star:<18} {c.star_lord:<9} " in row
+
 
 class TestRulingPlanets:
     def test_monday_day_lord_is_first(self):

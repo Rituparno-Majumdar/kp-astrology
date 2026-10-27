@@ -148,6 +148,20 @@ class TestSubSubInfo:
         assert sub_sub_lord(4.0) != sub_lord(4.0)
         assert sub_sub_lord(10.0) != sub_lord(10.0)   # Ketu vs Saturn
 
+    def test_subsub_sequence_opens_at_sub_lord_in_every_sub(self):
+        # Regression: the sub-sub sequence was taken from the star whose index
+        # equals the sub's position, which is only right in Ashwini, Magha and
+        # Mula.  The first sub-sub of every one of the 243 subs is its sub-lord.
+        for sidx in range(27):
+            for lord, start, _end, _span in sub_divisions(sidx):
+                assert sub_sub_lord(start + 1e-7) == lord
+
+    def test_subsub_lord_outside_ashwini(self):
+        # Moon sub of Krittika (27°20' - 28°26'40"): Moon 5.6', Mars 3.9',
+        # Rahu 10', Jupiter 8.9' ...; 25' in falls in Jupiter.
+        assert sub_lord(27.75) == "Moon"
+        assert sub_sub_lord(27.75) == "Jupiter"
+
 
 class TestSignHelpers:
     def test_sign_index_and_names(self):
